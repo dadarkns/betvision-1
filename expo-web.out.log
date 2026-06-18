@@ -1,0 +1,17 @@
+
+> betvision@0.1.0 web
+> expo start --web --port 8081
+
+Starting project at C:\Users\endel\OneDrive\Documentos\bet vision radar
+Metro is running in CI mode, reloads are disabled. Remove CI=true to enable watch mode.
+Starting Metro Bundler
+Waiting on http://localhost:8081
+Logs for your project will appear below.
+Web Bundled 2978ms node_modules\expo-router\entry.js (2938 modules)
+ LOG  [web] Logs will appear in the browser console
+Web node_modules\expo-router\entry.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+Web Bundled 73ms node_modules\expo-router\entry.js (1 module)
+ LOG  [web] Logs will appear in the browser console
+Web node_modules\expo-router\entry.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+Web Bundled 101ms node_modules\expo-router\entry.js (1 module)
+ LOG  [web] Logs will appear in the browser console
