@@ -1,0 +1,148 @@
+{
+  "schemaVersion": "1.0.0",
+  "project": {
+    "name": "BetVision",
+    "platform": "Expo React Native Web/Mobile",
+    "description": "Configuracao publica de backend para uso da equipe de front-end."
+  },
+  "environments": {
+    "development": {
+      "appEnv": "development",
+      "recommendedEnvFile": ".env"
+    },
+    "staging": {
+      "appEnv": "staging",
+      "recommendedEnvFile": ".env.local"
+    },
+    "production": {
+      "appEnv": "production",
+      "recommendedEnvFile": "CI/CD secrets ou proxy/backend"
+    }
+  },
+  "publicEnvironmentVariables": {
+    "EXPO_PUBLIC_APP_ENV": {
+      "required": true,
+      "example": "development",
+      "allowedValues": ["development", "staging", "production"],
+      "description": "Define qual ambiente o app esta usando."
+    },
+    "EXPO_PUBLIC_SUPABASE_URL": {
+      "required": true,
+      "example": "https://your-project.supabase.co",
+      "description": "URL publica do projeto Supabase."
+    },
+    "EXPO_PUBLIC_SUPABASE_ANON_KEY": {
+      "required": true,
+      "example": "your-public-anon-key",
+      "description": "Chave anon publica do Supabase. Nunca usar service_role."
+    },
+    "EXPO_PUBLIC_APISPORTS_BASE_URL": {
+      "required": true,
+      "example": "https://v3.football.api-sports.io",
+      "description": "Base URL da API esportiva usada em desenvolvimento."
+    },
+    "EXPO_PUBLIC_APISPORTS_KEY": {
+      "required": true,
+      "example": "your-api-sports-key",
+      "description": "Chave da API esportiva para desenvolvimento. Em producao deve ir para proxy/backend."
+    },
+    "EXPO_PUBLIC_SPORTS_FIXTURE_LIMIT": {
+      "required": false,
+      "example": "4",
+      "default": "4",
+      "description": "Quantidade maxima de jogos carregados por busca para controlar cota."
+    },
+    "EXPO_PUBLIC_SPORTS_REQUEST_TIMEOUT_MS": {
+      "required": false,
+      "example": "12000",
+      "default": "12000",
+      "description": "Timeout das requisicoes esportivas em milissegundos."
+    },
+    "EXPO_PUBLIC_REAL_STATS_CACHE_VERSION": {
+      "required": false,
+      "example": "v1",
+      "default": "v1",
+      "description": "Versao do cache local de estatisticas reais."
+    }
+  },
+  "services": {
+    "supabase": {
+      "enabledWhen": [
+        "EXPO_PUBLIC_SUPABASE_URL starts with https://",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY length greater than 12"
+      ],
+      "usedBy": [
+        "src/config/backend.ts",
+        "src/services/supabase.ts",
+        "src/services/authService.ts",
+        "app/auth.tsx",
+        "app/profile.tsx"
+      ],
+      "features": ["login", "cadastro", "sessao persistente"]
+    },
+    "sportsApi": {
+      "enabledWhen": ["EXPO_PUBLIC_APISPORTS_KEY length greater than 8"],
+      "baseUrlEnv": "EXPO_PUBLIC_APISPORTS_BASE_URL",
+      "apiKeyEnv": "EXPO_PUBLIC_APISPORTS_KEY",
+      "usedBy": [
+        "src/config/backend.ts",
+        "src/services/sportsApi.ts",
+        "src/services/realStatsRepository.ts",
+        "app/index.tsx",
+        "app/radar.tsx",
+        "app/match/[id].tsx"
+      ],
+      "endpoints": [
+        {
+          "path": "/fixtures",
+          "purpose": "Calendario e fixtures por data."
+        },
+        {
+          "path": "/predictions",
+          "purpose": "Probabilidades 1X2, comparacoes, conselho e H2H quando disponivel."
+        },
+        {
+          "path": "/odds",
+          "purpose": "Odds pre-match para mercados quando disponiveis."
+        },
+        {
+          "path": "/fixtures/statistics",
+          "purpose": "Estatisticas de partida live/finalizada."
+        },
+        {
+          "path": "/fixtures/events",
+          "purpose": "Eventos da partida quando houver cobertura."
+        },
+        {
+          "path": "/fixtures/lineups",
+          "purpose": "Escalacoes quando houver cobertura."
+        }
+      ]
+    }
+  },
+  "frontendRules": {
+    "doNotShowProviderNameInUi": true,
+    "doNotUseMockFallbackInMainScreens": true,
+    "showUnavailableStateWhenCoverageIsMissing": true,
+    "limitRequestsToAvoidFreePlanRateLimit": true,
+    "hideApiKeysFromUi": true
+  },
+  "securityRules": [
+    "Nao commitar .env ou .env.local.",
+    "Nao usar SUPABASE_SERVICE_ROLE_KEY no app Expo.",
+    "Variaveis EXPO_PUBLIC_* ficam expostas no cliente web/mobile.",
+    "Em producao, mover EXPO_PUBLIC_APISPORTS_KEY para proxy/backend.",
+    "Compartilhar apenas este JSON e .env.example com a equipe."
+  ],
+  "localSetup": {
+    "copyEnvExamplePowerShell": "Copy-Item .env.example .env",
+    "installDependencies": "npm install",
+    "runWeb": "npm run web",
+    "typecheck": "npm run typecheck"
+  },
+  "sourceOfTruth": {
+    "runtimeConfig": "src/config/backend.ts",
+    "envExample": ".env.example",
+    "documentation": "docs/BACKEND_CONFIG.md"
+  }
+}
