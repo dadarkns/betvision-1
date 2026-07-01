@@ -1,0 +1,68 @@
+# 📌 QUICK REFERENCE (Cole num post-it!)
+
+## 📂 ONDE IR?
+
+```
+Novo Componente?        → src/components/[dominio]/
+API/Backend?            → src/services/
+Função auxiliar?        → src/utils/
+Custom Hook?            → src/hooks/
+Novo Type?              → src/types/
+Constantes?             → src/constants/
+Página/Tela?            → app/
+Documentação?           → docs/guides/
+Screenshots?            → docs/design/screenshots/
+```
+
+## 📖 DOCUMENTOS PRINCIPAIS
+
+```
+├─ LEIA ISTO PRIMEIRO:          FOLDER_GUIDE.md
+├─ ESTRUTURA DO PROJETO:        docs/PROJECT_STRUCTURE.md
+├─ COMO COMEÇAR FEATURE:         docs/guides/PROJECT_MAP.md
+├─ SETUP DO AMBIENTE:            docs/guides/SETUP.md
+├─ INTEGRAÇÃO COM BACKEND:       docs/guides/BACKEND_INTEGRATION.md
+├─ O QUE CADA ARQUIVO FAZ:       docs/guides/FILE_REFERENCE.md
+└─ DESIGN & CORES:               docs/design/DESIGN_SYSTEM.md
+```
+
+## 💻 COMANDOS
+
+```bash
+npm install              # Instalar deps
+npm run web             # Rodar web
+npm run typecheck       # Verificar tipos
+cp .env.example .env    # Setup env
+```
+
+## ✅ CHECKLIST
+
+```
+□ npm install
+□ cp .env.example .env
+□ Editar .env (credenciais Supabase)
+□ npm run web
+```
+
+## 🎯 IMPORTS
+
+```typescript
+// Use SEMPRE @/
+import { Button } from '@/components/common';
+import { formatDate } from '@/utils';
+import type { Match } from '@/types';
+```
+
+## 📌 PADRÕES
+
+```
+Components:    PascalCase (MatchCard.tsx)
+Services:      camelCase (matchService.ts)
+Hooks:         camelCase (useAuth.ts)
+Types:         camelCase (match.ts)
+Utils:         camelCase (formatters.ts)
+```
+
+---
+
+🚀 **PRONTO? COMECE LENDO: `FOLDER_GUIDE.md`**

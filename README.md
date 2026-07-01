@@ -1,92 +1,191 @@
-# BetVision
+# 🎯 BetVision
 
-BetVision e um app web/mobile de estatisticas, probabilidades e analises de futebol, criado com Expo, React Native, TypeScript e Expo Router.
+**App web/mobile de estatísticas, probabilidades e análises de futebol** para apostadores analisarem dados antes de fazer suas apostas.
 
-O projeto roda primeiro como site, mas ja esta estruturado para evoluir para Android e iOS usando a mesma base de telas, componentes e logica.
+Criado com **Expo**, **React Native**, **TypeScript** e **Expo Router** para máxima compatibilidade web, Android e iOS.
 
-## Visao Geral
+---
 
-O MVP entrega uma experiencia de radar esportivo com:
+## 📋 Visão Geral
 
-- Dashboard de partidas monitoradas.
-- Radar de filtros por mercado e probabilidade minima.
-- Pagina completa de analise por jogo.
-- Favoritos salvos localmente.
-- Bilhetes conservadores e agressivos salvos localmente.
-- Login/cadastro preparado para Supabase.
-- Tema escuro inspirado na identidade visual da marca.
-- Dados mockados e gerador local deterministico de analises.
+O MVP oferece uma experiência completa de análise esportiva:
 
-O app nao consome odds reais, APIs esportivas reais nem servicos pagos de IA nesta fase.
+✅ Dashboard com partidas monitoradas  
+✅ Radar inteligente com filtros por mercado e probabilidade  
+✅ Análise profunda de cada jogo  
+✅ Favoritos salvos localmente  
+✅ Bilhetes conservadores e agressivos  
+✅ Autenticação via Supabase  
+✅ Tema escuro premium  
+✅ Dados mockados com análises locais  
 
-## Stack
+---
 
-- Expo 54
-- React Native 0.81
-- React 19
-- TypeScript
-- Expo Router
-- Supabase JS
-- AsyncStorage
-- Lucide React Native
-- Playwright para verificacao visual e de rotas
+## 🛠️ Stack Tecnológico
 
-## Como Rodar
+| Tecnologia | Versão | Propósito |
+|-----------|--------|----------|
+| **Expo** | 54 | Framework React Native |
+| **React Native** | 0.81 | Mobile/Web |
+| **React** | 19 | UI Library |
+| **TypeScript** | 5.9 | Type Safety |
+| **Expo Router** | 6 | Navegação/Rotas |
+| **Supabase** | 2.86 | Backend & Auth |
+| **AsyncStorage** | 2.2 | Persistência Local |
+| **Lucide Icons** | 0.561 | Ícones |
 
-Instale as dependencias:
+---
 
+## 🚀 Quick Start
+
+### 1. Instalar Dependências
 ```bash
 npm install
 ```
 
-Rode no navegador:
-
-```bash
-npm run web
-```
-
-Rode no Android:
-
-```bash
-npm run android
-```
-
-Rode no iOS:
-
-```bash
-npm run ios
-```
-
-Verifique TypeScript:
-
-```bash
-npm run typecheck
-```
-
-## Variaveis de Ambiente
-
-Copie o arquivo de exemplo:
-
+### 2. Configurar Ambiente
 ```bash
 cp .env.example .env
+# Preencher com credenciais Supabase
 ```
 
-No Windows PowerShell:
-
-```powershell
-Copy-Item .env.example .env
+### 3. Rodar
+```bash
+npm run web          # Navegador
+npm run android      # Android
+npm run ios         # iOS
+npm run typecheck   # Verificar tipos
 ```
 
-Preencha:
+---
 
+## 📁 Estrutura do Projeto
+
+```
+src/                          ← 💻 Código-fonte
+├─ components/               ← Componentes React
+│  ├─ common/               ← Base (Button, Card, etc)
+│  ├─ dashboard/            ← Dashboard
+│  ├─ match/                ← Análise de partidas
+│  ├─ radar/                ← Filtros
+│  └─ auth/                 ← Autenticação
+├─ pages/                    ← Telas principais
+├─ services/                 ← API & Supabase
+├─ hooks/                    ← Custom Hooks
+├─ types/                    ← TypeScript Types
+├─ utils/                    ← Funções auxiliares
+├─ constants/                ← Constantes
+├─ styles/                   ← Temas
+└─ assets/                   ← Imagens & Ícones
+
+app/                          ← 🔀 Expo Router (Navegação)
+
+docs/                         ← 📚 Documentação
+├─ design/                   ← Screenshots & Design System
+└─ guides/                   ← Guias de Setup, Backend, etc
+
+config/                       ← ⚙️ Configuração
+.logs/                        ← 📝 Logs (gitignore)
+```
+
+📖 **[Ver estrutura completa →](./docs/PROJECT_STRUCTURE.md)**
+
+---
+
+## 🔧 Configuração
+
+### Variáveis de Ambiente
 ```env
-EXPO_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-EXPO_PUBLIC_SUPABASE_ANON_KEY=your-public-anon-key
+EXPO_PUBLIC_SUPABASE_URL=https://seu-projeto.supabase.co
+EXPO_PUBLIC_SUPABASE_ANON_KEY=sua-chave-publica
 ```
 
-Sem essas variaveis, as telas de autenticacao continuam visiveis, mas o login real exibe aviso pedindo configuracao do Supabase.
+### Path Aliases (Imports)
+```typescript
+import type { Match } from '@/types';
+import { Button } from '@/components/common';
+import { formatDate } from '@/utils';
+```
 
-## Estrutura do Projeto
+---
+
+## 📚 Documentação
+
+| Documento | Descrição |
+|-----------|-----------|
+| [**Setup & Instalação**](./docs/guides/SETUP.md) | Como começar |
+| [**Estrutura do Projeto**](./docs/PROJECT_STRUCTURE.md) | Overview de arquivos e pastas |
+| [**Design System**](./docs/design/DESIGN_SYSTEM.md) | Cores, tipografia, componentes |
+| [**Backend & API**](./docs/guides/BACKEND_INTEGRATION.md) | Integração Supabase |
+| [**Referência de Arquivos**](./docs/guides/FILE_REFERENCE.md) | O que cada arquivo faz |
+| [**Arquitetura**](./ARCHITECTURE.md) | Padrões e convenções |
+
+---
+
+## 📦 Scripts Disponíveis
+
+```bash
+npm start              # Iniciar Expo
+npm run web           # Rodar no navegador
+npm run android       # Rodar no Android
+npm run ios          # Rodar no iOS
+npm run typecheck    # Verificar TypeScript
+```
+
+---
+
+## 🎨 Design
+
+📸 **Screenshots:** Ver em [`docs/design/screenshots/`](./docs/design/screenshots/)
+
+🎯 **Protótipo:** [Google Stitch Design](https://stitch.withgoogle.com/projects/15019367461677503836)
+
+---
+
+## 🚀 Roadmap
+
+- [ ] Componentes base
+- [ ] Services de integração
+- [ ] Custom hooks
+- [ ] Temas e estilos
+- [ ] Páginas principais
+- [ ] Autenticação Supabase
+- [ ] Sincronização de dados
+- [ ] Testes e validações
+
+---
+
+## 📝 Estrutura de Telas
+
+```
+Dashboard (Home)
+├─ Radar (Filtros)
+├─ Match/:id (Análise)
+├─ Favorites (Favoritos)
+├─ Slips (Bilhetes)
+├─ Profile (Perfil)
+└─ Auth (Login/Signup)
+```
+
+---
+
+## 💡 Convenções
+
+✅ Components em **PascalCase** (ex: `MatchCard.tsx`)  
+✅ Services/Hooks em **camelCase** (ex: `useAuth.ts`)  
+✅ Imports com **@/** alias  
+✅ Types em **`types/`** folder  
+✅ Utils sem dependências (puras)  
+
+---
+
+## 📞 Contato & Suporte
+
+Para dúvidas sobre o projeto, consulte os [**docs**](./docs/) ou revise o [**ARCHITECTURE.md**](./ARCHITECTURE.md)
+
+---
+
+## 📄 Estrutura de Telas (Expo Router)
 
 ```text
 app/

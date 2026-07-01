@@ -1,0 +1,140 @@
+export const liveMatches = [
+  {
+    id: '1',
+    homeTeam: 'R. MADRID',
+    awayTeam: 'MAN CITY',
+    homeScore: 2,
+    awayScore: 1,
+    minute: '74',
+    status: 'live' as const,
+    league: 'Champions League',
+    xgHome: 1.84,
+    xgAway: 1.21,
+    possessionHome: 48,
+    possessionAway: 52,
+  },
+  {
+    id: '2',
+    homeTeam: 'BARCELONA',
+    awayTeam: 'B. MUNICH',
+    homeScore: 0,
+    awayScore: 0,
+    minute: 'HT',
+    status: 'halftime' as const,
+    league: 'Champions League',
+    xgHome: 0.42,
+    xgAway: 0.68,
+    possessionHome: 55,
+    possessionAway: 45,
+  },
+  {
+    id: '3',
+    homeTeam: 'FLAMENGO',
+    awayTeam: 'PALMEIRAS',
+    homeScore: 1,
+    awayScore: 0,
+    minute: '12',
+    status: 'live' as const,
+    league: 'Brasileirão',
+    xgHome: 0.88,
+    xgAway: 0.05,
+    possessionHome: 62,
+    possessionAway: 38,
+  },
+];
+
+export const todaysMatches = [
+  {
+    id: 't1',
+    homeTeam: 'Arsenal',
+    awayTeam: 'Liverpool',
+    time: '16:00',
+    league: 'Premier League',
+    winProb: [0.45, 0.28, 0.27],
+  },
+  {
+    id: 't2',
+    homeTeam: 'Chelsea',
+    awayTeam: 'Spurs',
+    time: '18:30',
+    league: 'Premier League',
+    winProb: [0.25, 0.30, 0.45],
+  },
+  {
+    id: 't3',
+    homeTeam: 'Atlético',
+    awayTeam: 'Betis',
+    time: '20:00',
+    league: 'La Liga',
+    winProb: [0.65, 0.20, 0.15],
+  },
+  {
+    id: 't4',
+    homeTeam: 'PAL',
+    awayTeam: 'FLA',
+    time: '21:30',
+    league: 'Brasileirão',
+    winProb: [0.40, 0.25, 0.35],
+  },
+];
+
+export const topScorers = [
+  { id: '1', name: 'E. Haaland', club: 'Manchester City', goals: 18, rank: 1 },
+  { id: '2', name: 'R. Lewandowski', club: 'FC Barcelona', goals: 14, rank: 2 },
+  { id: '3', name: 'Vinícius Jr.', club: 'Real Madrid', goals: 12, rank: 3 },
+  { id: '4', name: 'K. Mbappé', club: 'Real Madrid', goals: 24, rank: 4 },
+  { id: '5', name: 'Pedro', club: 'Flamengo', goals: 11, rank: 5 },
+];
+
+export const leagueStandings = [
+  { pos: 1, team: 'Botafogo', pts: 67, played: 31, won: 20, drawn: 7, lost: 4, gd: 23, pct: 72.0, zone: 'title' as const },
+  { pos: 2, team: 'Palmeiras', pts: 61, played: 31, won: 18, drawn: 7, lost: 6, gd: 27, pct: 65.6, zone: 'libertadores' as const },
+  { pos: 3, team: 'Fortaleza', pts: 60, played: 31, won: 17, drawn: 9, lost: 5, gd: 13, pct: 64.5, zone: 'libertadores' as const },
+  { pos: 4, team: 'Flamengo', pts: 55, played: 31, won: 16, drawn: 7, lost: 8, gd: 14, pct: 59.1, zone: 'libertadores' as const },
+  { pos: 5, team: 'São Paulo', pts: 51, played: 31, won: 14, drawn: 9, lost: 8, gd: 8, pct: 54.8, zone: 'sudamericana' as const },
+  { pos: 6, team: 'Corinthians', pts: 48, played: 31, won: 13, drawn: 9, lost: 9, gd: 4, pct: 51.6, zone: 'sudamericana' as const },
+  { pos: 7, team: 'Grêmio', pts: 45, played: 31, won: 12, drawn: 9, lost: 10, gd: 2, pct: 48.4, zone: 'mid' as const },
+  { pos: 8, team: 'Athletico', pts: 44, played: 31, won: 12, drawn: 8, lost: 11, gd: 1, pct: 47.3, zone: 'mid' as const },
+  { pos: 9, team: 'Fluminense', pts: 43, played: 31, won: 11, drawn: 10, lost: 10, gd: -1, pct: 46.2, zone: 'mid' as const },
+  { pos: 10, team: 'Internacional', pts: 42, played: 29, won: 11, drawn: 9, lost: 9, gd: 2, pct: 48.3, zone: 'mid' as const },
+  { pos: 17, team: 'Juventude', pts: 34, played: 31, won: 8, drawn: 10, lost: 13, gd: -12, pct: 36.5, zone: 'relegation' as const },
+  { pos: 18, team: 'Cuiabá', pts: 30, played: 31, won: 7, drawn: 9, lost: 15, gd: -18, pct: 32.3, zone: 'relegation' as const },
+];
+
+export const playerVinicius = {
+  name: 'Vinícius Júnior',
+  club: 'Real Madrid',
+  nationality: 'Brazil',
+  position: 'LW',
+  age: 23,
+  rating: 8.24,
+  goals: 18,
+  assists: 11,
+  accuracy: 86,
+  skills: {
+    pace: 95,
+    dribbling: 92,
+    finishing: 78,
+    passing: 72,
+    physical: 70,
+  },
+  recentMatches: [
+    { date: '22 MAY', home: 'Real Madrid', away: 'B. Dortmund', score: '3-1', goals: 2, assists: 1, rating: 9.8, result: 'W' as const },
+    { date: '18 MAY', home: 'Real Madrid', away: 'Girona', score: '4-0', goals: 1, assists: 0, rating: 8.2, result: 'W' as const },
+    { date: '14 MAY', home: 'Man City', away: 'Real Madrid', score: '1-1', goals: 0, assists: 0, rating: 6.9, result: 'D' as const },
+    { date: '10 MAY', home: 'Real Madrid', away: 'Cádiz', score: '3-0', goals: 1, assists: 1, rating: 8.5, result: 'W' as const },
+    { date: '05 MAY', home: 'Bayern', away: 'Real Madrid', score: '2-1', goals: 0, assists: 0, rating: 6.5, result: 'L' as const },
+  ],
+  performance: {
+    duelsWon: 72,
+    dribblesCompleted: 64,
+    topSpeedKmh: 36.1,
+  },
+};
+
+export const recentTransfers = [
+  { id: 't1', player: 'Victor Osimhen', position: 'CF', age: 25, from: 'Napoli', to: 'Chelsea FC', fee: '€115.0M', status: 'done' as const },
+  { id: 't2', player: 'Leny Yoro', position: 'CB', age: 18, from: 'Lille OSC', to: 'Real Madrid', fee: '€62.0M', status: 'pending' as const },
+  { id: 't3', player: 'João Neves', position: 'DM', age: 19, from: 'Benfica', to: 'PSG', fee: '€70.0M', status: 'rumor' as const },
+  { id: 't4', player: 'Amadou Onana', position: 'DM', age: 22, from: 'Everton', to: 'Aston Villa', fee: '€59.3M', status: 'done' as const },
+];
