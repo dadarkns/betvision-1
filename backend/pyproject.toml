@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=75", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "betvision-ai"
+version = "0.1.0"
+description = "Backend CLI de probabilidades para a Copa do Mundo"
+requires-python = ">=3.12"
+dependencies = [
+  "httpx>=0.28,<1",
+  "joblib>=1.5,<2",
+  "numpy>=2.2,<3",
+  "pandas>=2.2,<4",
+  "pydantic>=2.10,<3",
+  "pydantic-settings>=2.7,<3",
+  "rich>=13.9,<16",
+  "scikit-learn>=1.6,<2",
+  "scipy>=1.15,<2",
+  "typer>=0.15,<1",
+  "xgboost>=2.1,<4",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8.3,<10"]
+
+[project.scripts]
+betvision-ai = "betvision_ai.cli:app"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["betvision_ai*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+markers = [
+  "live_api: teste opcional que consome no máximo uma chamada real",
+]

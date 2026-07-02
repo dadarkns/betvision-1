@@ -1,0 +1,57 @@
+{
+  "fixture_id": 1489406,
+  "date": "2026-06-24T19:00:00-03:00",
+  "competition": "World Cup",
+  "stage": "Group Stage - 3",
+  "neutral": true,
+  "home": {
+    "id": "scotland",
+    "name": "Scotland",
+    "stats": {
+      "games": 2,
+      "goals_for_avg": 0.5,
+      "goals_against_avg": 0.5,
+      "win_rate": 0.5,
+      "draw_rate": 0.0,
+      "shots_for_avg": 9.5,
+      "shots_on_target_for_avg": 3.0,
+      "corners_for_avg": 4.0,
+      "fouls_for_avg": 13.5,
+      "cards_for_avg": 2.0
+    },
+    "players": [
+      {
+        "id": "forward-1",
+        "name": "Atacante Escócia",
+        "position": "F",
+        "expected_minutes": 80,
+        "starter_probability": 0.9,
+        "stats_per90": {
+          "goals": 0.32,
+          "assists": 0.14,
+          "cards": 0.08,
+          "shots": 2.3,
+          "shots_on_target": 0.9,
+          "fouls": 1.1
+        }
+      }
+    ]
+  },
+  "away": {
+    "id": "brazil",
+    "name": "Brazil",
+    "stats": {
+      "games": 2,
+      "goals_for_avg": 2.0,
+      "goals_against_avg": 0.5,
+      "win_rate": 1.0,
+      "draw_rate": 0.0,
+      "shots_for_avg": 16.0,
+      "shots_on_target_for_avg": 6.5,
+      "corners_for_avg": 6.0,
+      "fouls_for_avg": 11.0,
+      "cards_for_avg": 1.5
+    },
+    "players": []
+  }
+}
