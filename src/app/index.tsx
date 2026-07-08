@@ -1,117 +1,56 @@
 import React, { useState } from 'react';
-import {
-  View, Text, Pressable, StyleSheet, Platform,
-} from 'react-native';
-import { DashboardScreen } from './DashboardScreen';
-import { LeagueScreen } from './LeagueScreen';
-import { PlayerScreen } from './PlayerScreen';
-import { TransfersScreen } from './TransfersScreen';
-import { colors, fonts } from '../constants/theme';
+import { Activity, ArrowLeftRight, ChartNoAxesCombined, Radio, Route, Shield, Trophy } from 'lucide-react-native';
+import { MatchCenterScreen } from '../screens/MatchCenterScreen';
+import { LeagueStandingsScreen } from '../screens/LeagueStandingsScreen';
+import { TransferCenterScreen } from '../screens/TransferCenterScreen';
+import { PlayerInsightsScreen } from '../screens/PlayerInsightsScreen';
+import { TeamAnalysisScreen } from '../screens/TeamAnalysisScreen';
+import { ComparisonScreen } from '../screens/ComparisonScreen';
+import { ApiDocsScreen } from '../screens/ApiDocsScreen';
+import { CommandCenterShell, ShellNavItem } from '../components/layout/CommandCenterShell';
 
-type Tab = 'dashboard' | 'league' | 'player' | 'transfers';
+type ViewKey = 'match' | 'league' | 'transfers' | 'insights' | 'analysis' | 'comparison' | 'api';
 
-const TABS: { key: Tab; label: string; icon: string }[] = [
-  { key: 'dashboard', label: 'Ao Vivo', icon: '⚡' },
-  { key: 'league', label: 'Liga', icon: '🏆' },
-  { key: 'player', label: 'Jogador', icon: '👤' },
-  { key: 'transfers', label: 'Mercado', icon: '↔' },
+const NAV_ITEMS: ShellNavItem[] = [
+  { key: 'match', label: 'Match Center', icon: <Radio size={14} color="#77ff5f" /> },
+  { key: 'league', label: 'Leagues', icon: <Trophy size={14} color="#77ff5f" /> },
+  { key: 'transfers', label: 'Transfers', icon: <ArrowLeftRight size={14} color="#77ff5f" /> },
+  { key: 'insights', label: 'Insights', icon: <ChartNoAxesCombined size={14} color="#77ff5f" /> },
+  { key: 'analysis', label: 'Team Analysis', icon: <Shield size={14} color="#77ff5f" /> },
+  { key: 'comparison', label: 'Comparison', icon: <Activity size={14} color="#77ff5f" /> },
+  { key: 'api', label: 'Pro API', icon: <Route size={14} color="#77ff5f" /> },
 ];
 
-function TabIcon({ icon, label, active, onPress }: {
-  icon: string; label: string; active: boolean; onPress: () => void;
-}) {
-  return (
-    <Pressable style={styles.tabItem} onPress={onPress}>
-      <Text style={[styles.tabIcon, active && styles.tabIconActive]}>{icon}</Text>
-      <Text style={[styles.tabLabel, active && styles.tabLabelActive]}>{label}</Text>
-      {active && <View style={styles.tabIndicator} />}
-    </Pressable>
-  );
-}
-
 export default function App() {
-  const [activeTab, setActiveTab] = useState<Tab>('dashboard');
+  const [activeView, setActiveView] = useState<ViewKey>('match');
 
-  const renderScreen = () => {
-    switch (activeTab) {
-      case 'dashboard': return <DashboardScreen />;
-      case 'league': return <LeagueScreen />;
-      case 'player': return <PlayerScreen />;
-      case 'transfers': return <TransfersScreen />;
+  const renderView = () => {
+    switch (activeView) {
+      case 'match':
+        return <MatchCenterScreen />;
+      case 'league':
+        return <LeagueStandingsScreen />;
+      case 'transfers':
+        return <TransferCenterScreen />;
+      case 'insights':
+        return <PlayerInsightsScreen />;
+      case 'analysis':
+        return <TeamAnalysisScreen />;
+      case 'comparison':
+        return <ComparisonScreen />;
+      case 'api':
+        return <ApiDocsScreen />;
     }
   };
 
   return (
-    <View style={styles.root}>
-      <View style={styles.content}>
-        {renderScreen()}
-      </View>
-
-      {/* Bottom Tab Bar */}
-      <View style={styles.tabBar}>
-        {TABS.map(tab => (
-          <TabIcon
-            key={tab.key}
-            icon={tab.icon}
-            label={tab.label}
-            active={activeTab === tab.key}
-            onPress={() => setActiveTab(tab.key)}
-          />
-        ))}
-      </View>
-    </View>
+    <CommandCenterShell
+      activeNavKey={activeView}
+      navItems={NAV_ITEMS}
+      onNavigate={key => setActiveView(key as ViewKey)}
+      searchPlaceholder="Search players, clubs, or rumors..."
+    >
+      {renderView()}
+    </CommandCenterShell>
   );
 }
-
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  content: {
-    flex: 1,
-  },
-  tabBar: {
-    flexDirection: 'row',
-    backgroundColor: colors.surfaceContainerLowest,
-    borderTopWidth: 1,
-    borderTopColor: colors.white10,
-    paddingBottom: Platform.OS === 'ios' ? 20 : 8,
-    paddingTop: 8,
-    paddingHorizontal: 8,
-  },
-  tabItem: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 3,
-    position: 'relative',
-    paddingVertical: 4,
-  },
-  tabIcon: {
-    fontSize: 20,
-    opacity: 0.4,
-  },
-  tabIconActive: {
-    opacity: 1,
-  },
-  tabLabel: {
-    ...fonts.labelMono,
-    fontSize: 9,
-    color: colors.onSurfaceVariant,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-  },
-  tabLabelActive: {
-    color: colors.primaryFixed,
-  },
-  tabIndicator: {
-    position: 'absolute',
-    top: -8,
-    width: 24,
-    height: 2,
-    backgroundColor: colors.primaryFixed,
-    borderRadius: 1,
-    alignSelf: 'center',
-  },
-});
