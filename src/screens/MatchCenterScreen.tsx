@@ -16,7 +16,7 @@ export function MatchCenterScreen() {
   return (
     <View style={styles.page}>
       <ScreenHeader
-        kicker="Match Center"
+        kicker="Central de Partidas"
         title="Acompanhamento ao vivo"
         subtitle="Placar, xG e leitura tática em um único painel responsivo."
         action={(
@@ -33,7 +33,7 @@ export function MatchCenterScreen() {
             <View style={styles.clubMark} />
             <View>
               <Text style={styles.teamName}>{mainMatch.homeTeam}</Text>
-              <Text style={styles.teamMeta}>Lider do campeonato</Text>
+              <Text style={styles.teamMeta}>Líder do campeonato</Text>
             </View>
           </View>
 
@@ -57,8 +57,8 @@ export function MatchCenterScreen() {
 
         <View style={styles.scoreboardFooter}>
           <View style={styles.metaRow}>
-            <Text style={styles.metaLabel}>Estadio Monumental Striker</Text>
-            <Text style={styles.metaLabel}>Publico: 48,200</Text>
+            <Text style={styles.metaLabel}>Estádio Monumental BetVision</Text>
+            <Text style={styles.metaLabel}>Público: 48.200</Text>
           </View>
           <View style={styles.actionRow}>
             <View style={styles.iconButton}><Activity size={14} color={colors.primaryFixed} /></View>
@@ -109,10 +109,10 @@ export function MatchCenterScreen() {
           <GlassCard style={styles.promoCard} highlighted>
             <View style={styles.promoTop}>
               <Sparkles size={16} color={colors.primaryFixed} />
-              <Text style={styles.promoKicker}>Precisao Pro</Text>
+              <Text style={styles.promoKicker}>Precisão Pro</Text>
             </View>
             <Text style={styles.promoTitle}>Acesso total a algoritmos preditivos, heatmaps e scouts detalhados.</Text>
-            <View style={styles.ctaPill}><Text style={styles.ctaText}>Assinar por R$ 29,90/mes</Text></View>
+            <View style={styles.ctaPill}><Text style={styles.ctaText}>Assinar por R$ 29,90/mês</Text></View>
           </GlassCard>
         </View>
       </View>
@@ -120,7 +120,7 @@ export function MatchCenterScreen() {
       <Grid style={styles.statGrid}>
         <StatTile label="Ao vivo" value={liveMatches.length} hint="jogos em tempo real" accent={colors.primaryFixed} />
         <StatTile label="Hoje" value={todaysMatches.length} hint="partidas analisadas" accent={colors.secondaryContainer} />
-        <StatTile label="xG lider" value={secondaryMatch.xgHome.toFixed(2)} hint="melhor oportunidade" accent={colors.primaryFixed} />
+        <StatTile label="Maior xG" value={secondaryMatch.xgHome.toFixed(2)} hint="melhor oportunidade" accent={colors.primaryFixed} />
         <StatTile label="Atividade" value="Alta" hint="mercado monitorado" accent={colors.onSurface} />
       </Grid>
     </View>

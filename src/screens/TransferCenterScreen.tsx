@@ -22,13 +22,13 @@ export function TransferCenterScreen() {
   return (
     <View style={styles.page}>
       <ScreenHeader
-        kicker="Transfers"
-        title="Transfer Center"
-        subtitle="Inteligencia de mercado em tempo real, historico e leitura de oportunidade."
+        kicker="Transferências"
+        title="Central de Transferências"
+        subtitle="Inteligência de mercado em tempo real, histórico e leitura de oportunidade."
         action={(
           <View style={styles.headerPills}>
-            <Pill label="Market open" active />
-            <Pill label="Deadline: 12d 14h 05m" />
+            <Pill label="Mercado aberto" active />
+            <Pill label="Prazo: 12d 14h 05m" />
           </View>
         )}
       />
@@ -36,25 +36,25 @@ export function TransferCenterScreen() {
       <View style={styles.gridWrap}>
         <View style={styles.leftColumn}>
           <GlassCard style={styles.chartCard}>
-            <SectionLabel title="Market Spending Trends" action="Window '24" />
+            <SectionLabel title="Tendências de Mercado" action="Janela '24" />
             <View style={styles.chartWrap}>
               {[18, 24, 28, 42, 22, 30, 48, 15, 20, 26].map((height, index) => (
                 <View key={index} style={[styles.bar, { height: `${height}%`, backgroundColor: index < 7 ? `rgba(119, 255, 95, ${0.14 + index * 0.04})` : colors.white5 }]} />
               ))}
             </View>
             <View style={styles.chartLegend}>
-              <Text style={styles.legendText}>Green bars = active deals</Text>
-              <Text style={styles.legendText}>Gray bars = baseline spend</Text>
+              <Text style={styles.legendText}>Barras verdes = acordos ativos</Text>
+              <Text style={styles.legendText}>Barras cinzas = gasto base</Text>
             </View>
           </GlassCard>
 
           <GlassCard style={styles.tableCard}>
-            <SectionLabel title="Latest Transfers" action="View all activities" />
+            <SectionLabel title="Últimas Transferências" action="Ver todas" />
             <View style={styles.tableHead}>
-              <Text style={[styles.col, styles.colPlayer]}>Player</Text>
-              <Text style={[styles.col, styles.colRoute]}>From / To</Text>
-              <Text style={styles.col}>Fee</Text>
-              <Text style={styles.col}>Market</Text>
+              <Text style={[styles.col, styles.colPlayer]}>Jogador</Text>
+              <Text style={[styles.col, styles.colRoute]}>De / Para</Text>
+              <Text style={styles.col}>Taxa</Text>
+              <Text style={styles.col}>Mercado</Text>
               <Text style={[styles.col, styles.colStatus]}>Status</Text>
             </View>
             {recentTransfers.map(transfer => (
@@ -63,7 +63,7 @@ export function TransferCenterScreen() {
                   <View style={styles.avatar} />
                   <View>
                     <Text style={styles.playerName}>{transfer.player}</Text>
-                    <Text style={styles.playerMeta}>{transfer.position} | {transfer.age} yrs</Text>
+                    <Text style={styles.playerMeta}>{transfer.position} | {transfer.age} anos</Text>
                   </View>
                 </View>
                 <View style={[styles.col, styles.colRoute]}>
@@ -83,11 +83,11 @@ export function TransferCenterScreen() {
 
         <View style={styles.rightColumn}>
           <GlassCard style={styles.newsCard}>
-            <SectionLabel title="Rumors & News" />
+            <SectionLabel title="Rumores e Notícias" />
             <View style={styles.newsList}>
               {rumors.map((item, index) => (
                 <View key={item.time} style={[styles.newsItem, index < rumors.length - 1 && styles.newsDivider]}>
-                  <Text style={styles.newsMeta}>{item.time} ago | Reliability: {item.level}</Text>
+                  <Text style={styles.newsMeta}>{item.time} atrás | Confiabilidade: {item.level}</Text>
                   <Text style={styles.newsTitle}>{item.text}</Text>
                 </View>
               ))}
@@ -95,7 +95,7 @@ export function TransferCenterScreen() {
           </GlassCard>
 
           <GlassCard style={styles.windowCard}>
-            <SectionLabel title="Top of the Window" />
+            <SectionLabel title="Destaques da Janela" />
             <View style={styles.rankList}>
               {windowRankings.map(item => (
                 <View key={item.rank} style={styles.rankRow}>
@@ -112,18 +112,18 @@ export function TransferCenterScreen() {
 
           <Grid>
             <StatTile label="Volume" value="EUR1.2B" hint="janelas ativas" accent={colors.primaryFixed} />
-            <StatTile label="Hottest" value="15" hint="rumores fortes" accent={colors.secondaryContainer} />
-            <StatTile label="Done" value={recentTransfers.length} hint="fechados" accent={colors.onSurface} />
-            <StatTile label="Momentum" value="Alta" hint="mercado aquecido" accent={colors.error} />
+            <StatTile label="Quentes" value="15" hint="rumores fortes" accent={colors.secondaryContainer} />
+            <StatTile label="Fechados" value={recentTransfers.length} hint="concluídos" accent={colors.onSurface} />
+            <StatTile label="Momento" value="Alta" hint="mercado aquecido" accent={colors.error} />
           </Grid>
         </View>
       </View>
 
       <GlassCard style={styles.footerCard}>
-        <View style={styles.footerItem}><CircleDollarSign size={16} color={colors.primaryFixed} /><Text style={styles.footerText}>Fee intelligence</Text></View>
-        <View style={styles.footerItem}><TrendingUp size={16} color={colors.secondaryContainer} /><Text style={styles.footerText}>Value tracking</Text></View>
-        <View style={styles.footerItem}><Flame size={16} color={colors.primaryFixed} /><Text style={styles.footerText}>Hot players</Text></View>
-        <View style={styles.footerItem}><Megaphone size={16} color={colors.onSurfaceVariant} /><Text style={styles.footerText}>Market alerts</Text></View>
+        <View style={styles.footerItem}><CircleDollarSign size={16} color={colors.primaryFixed} /><Text style={styles.footerText}>Inteligência de taxas</Text></View>
+        <View style={styles.footerItem}><TrendingUp size={16} color={colors.secondaryContainer} /><Text style={styles.footerText}>Rastreamento de valor</Text></View>
+        <View style={styles.footerItem}><Flame size={16} color={colors.primaryFixed} /><Text style={styles.footerText}>Jogadores em alta</Text></View>
+        <View style={styles.footerItem}><Megaphone size={16} color={colors.onSurfaceVariant} /><Text style={styles.footerText}>Alertas de mercado</Text></View>
       </GlassCard>
     </View>
   );

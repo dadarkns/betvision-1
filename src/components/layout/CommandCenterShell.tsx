@@ -38,10 +38,10 @@ function ShellChip({ label, active, onPress, icon }: {
 
 export function CommandCenterShell({
   brand = 'BETVISION',
-  tagline = 'Elite analytics',
+  tagline = 'Análise esportiva',
   title,
   subtitle,
-  searchPlaceholder = 'Search teams, players, or rumors...',
+  searchPlaceholder = 'Buscar times, jogadores ou rumores...',
   activeNavKey,
   navItems = [],
   onNavigate,
@@ -90,10 +90,10 @@ export function CommandCenterShell({
 
             <View style={styles.sidebarFooter}>
               <View style={styles.upgradeCard}>
-                <Text style={styles.upgradeLabel}>PRO ACCESS</Text>
-                <Text style={styles.upgradeText}>Unlock predictive models, deep scouting and API data.</Text>
+                <Text style={styles.upgradeLabel}>ACESSO PRO</Text>
+                <Text style={styles.upgradeText}>Desbloqueie modelos preditivos, scouting avançado e dados via API.</Text>
                 <ShellChip
-                  label="UPGRADE PRO"
+                  label="ASSINAR PRO"
                   active
                   icon={<View style={styles.upgradeDot} />}
                 />
@@ -151,10 +151,10 @@ export function CommandCenterShell({
             {isDesktop ? (
               <View style={styles.quickActions}>
                 <View style={styles.quickActionPill}>
-                  <Text style={styles.quickActionLabel}>EU-WEST-1</Text>
+                  <Text style={styles.quickActionLabel}>SERVIDOR</Text>
                 </View>
                 <View style={styles.quickActionPill}>
-                  <Text style={styles.quickActionLabel}>API STATUS</Text>
+                  <Text style={styles.quickActionLabel}>STATUS API</Text>
                 </View>
               </View>
             ) : null}

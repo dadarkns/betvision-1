@@ -22,13 +22,13 @@ export function LeagueStandingsScreen() {
   return (
     <View style={styles.page}>
       <ScreenHeader
-        kicker="Leagues"
-        title="Brasileirao Serie A"
-        subtitle="Tabela compacta com zonas, tendencia e leitura de performance."
+        kicker="Ligas"
+        title="Brasileirão Série A"
+        subtitle="Tabela compacta com zonas, tendência e leitura de performance."
         action={(
           <View style={styles.badgeStack}>
-            <Pill label="Season 2024" active />
-            <Pill label="Round 32 of 38" />
+            <Pill label="Temporada 2024" active />
+            <Pill label="Rodada 32 de 38" />
           </View>
         )}
       />
@@ -113,7 +113,7 @@ export function LeagueStandingsScreen() {
           </GlassCard>
 
           <Grid>
-            <StatTile label="Leader" value={leader.pts} hint="pontos acumulados" accent={colors.primaryFixed} />
+            <StatTile label="Líder" value={leader.pts} hint="pontos acumulados" accent={colors.primaryFixed} />
             <StatTile label="Zona" value="G4" hint="libertadores" accent={colors.secondaryContainer} />
             <StatTile label="Risco" value={relegation ? relegation.team : '0'} hint="zona vermelha" accent={colors.error} />
             <StatTile label="Média" value="2.42" hint="g/j" accent={colors.onSurface} />

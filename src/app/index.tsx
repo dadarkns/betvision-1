@@ -11,12 +11,12 @@ import { CommandCenterShell, ShellNavItem } from '../components/layout/CommandCe
 type ViewKey = 'match' | 'league' | 'transfers' | 'insights' | 'analysis' | 'comparison';
 
 const NAV_ITEMS: ShellNavItem[] = [
-  { key: 'match', label: 'Match Center', icon: <Radio size={14} color="#65ff4b" /> },
-  { key: 'league', label: 'Leagues', icon: <Trophy size={14} color="#65ff4b" /> },
-  { key: 'transfers', label: 'Transfers', icon: <ArrowLeftRight size={14} color="#65ff4b" /> },
-  { key: 'insights', label: 'Insights', icon: <ChartNoAxesCombined size={14} color="#65ff4b" /> },
-  { key: 'analysis', label: 'Team Analysis', icon: <Shield size={14} color="#65ff4b" /> },
-  { key: 'comparison', label: 'Comparison', icon: <Activity size={14} color="#65ff4b" /> },
+  { key: 'match', label: 'Partidas', icon: <Radio size={14} color="#65ff4b" /> },
+  { key: 'league', label: 'Ligas', icon: <Trophy size={14} color="#65ff4b" /> },
+  { key: 'transfers', label: 'Transferências', icon: <ArrowLeftRight size={14} color="#65ff4b" /> },
+  { key: 'insights', label: 'Desempenho', icon: <ChartNoAxesCombined size={14} color="#65ff4b" /> },
+  { key: 'analysis', label: 'Análise de Time', icon: <Shield size={14} color="#65ff4b" /> },
+  { key: 'comparison', label: 'Comparação', icon: <Activity size={14} color="#65ff4b" /> },
 ];
 
 export default function App() {
@@ -44,7 +44,7 @@ export default function App() {
       activeNavKey={activeView}
       navItems={NAV_ITEMS}
       onNavigate={key => setActiveView(key as ViewKey)}
-      searchPlaceholder="Search players, clubs, or rumors..."
+      searchPlaceholder="Buscar jogadores, clubes ou rumores..."
     >
       {renderView()}
     </CommandCenterShell>
