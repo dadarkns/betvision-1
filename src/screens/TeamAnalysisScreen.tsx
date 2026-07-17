@@ -17,7 +17,6 @@ const fixtures = [
 ];
 
 export function TeamAnalysisScreen() {
-  const nodeOffsets = [styles.node0, styles.node1, styles.node2, styles.node3];
 
   return (
     <View style={styles.page}>
@@ -59,20 +58,28 @@ export function TeamAnalysisScreen() {
       <View style={styles.mainGrid}>
         <GlassCard style={styles.boardCard}>
           <SectionLabel title="Tactical Board" action="Attack" />
-          <View style={styles.pitch}>
-            <View style={styles.pitchCenter} />
-            {[1, 2, 4, 5, 7, 8, 11, 12, 15, 22, 23].map((num, index) => (
-              <View key={num} style={[styles.node, index < 3 ? styles.nodeActive : null, nodeOffsets[index % nodeOffsets.length]]}>
-                <Text style={styles.nodeText}>{num}</Text>
+          <View style={styles.tacticalGrid}>
+            {[
+              { label: 'Posse de bola', value: '59.2%', accent: colors.primaryFixed },
+              { label: 'Precisão de passe', value: '89.4%', accent: colors.primaryFixed },
+              { label: 'Dist. média de chute', value: '16.8m', accent: colors.secondaryFixed },
+              { label: 'Entradas no terço final', value: '48', accent: colors.secondaryFixed },
+              { label: 'Pressões por jogo', value: '31.4', accent: colors.onSurfaceVariant },
+              { label: 'Duelos ganhos', value: '54%', accent: colors.onSurfaceVariant },
+            ].map(item => (
+              <View key={item.label} style={styles.tacticalTile}>
+                <Text style={[styles.tacticalValue, { color: item.accent }]}>{item.value}</Text>
+                <Text style={styles.tacticalLabel}>{item.label}</Text>
               </View>
             ))}
-            <View style={styles.pitchGlow} />
           </View>
-          <View style={styles.pitchStats}>
-            <Text style={styles.pitchStat}>Possession 59.2%</Text>
-            <Text style={styles.pitchStat}>Pass accuracy 89.4%</Text>
-            <Text style={styles.pitchStat}>Avg shot dist. 16.8m</Text>
-            <Text style={styles.pitchStat}>Final 3rd entry 48</Text>
+          <View style={styles.formationRow}>
+            {['4', '3', '3'].map((n, i) => (
+              <View key={i} style={styles.formationSegment}>
+                <Text style={styles.formationNumber}>{n}</Text>
+              </View>
+            ))}
+            <Text style={styles.formationLabel}>Formação padrão — 4·3·3</Text>
           </View>
         </GlassCard>
 
@@ -211,72 +218,64 @@ const styles = StyleSheet.create({
     flex: 1,
     minWidth: 0,
     padding: spacing.lg,
+    gap: spacing.md,
   },
-  pitch: {
-    aspectRatio: 1.3,
+  tacticalGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 10,
+  },
+  tacticalTile: {
+    flexBasis: '48%',
+    minWidth: 120,
+    flex: 1,
     borderRadius: radius.lg,
     borderWidth: 1,
     borderColor: colors.white10,
     backgroundColor: colors.surfaceContainerLow,
-    position: 'relative',
-    overflow: 'hidden',
-    marginBottom: spacing.md,
+    padding: spacing.md,
+    gap: 4,
   },
-  pitchCenter: {
-    position: 'absolute',
-    width: 36,
-    height: 36,
-    borderRadius: 999,
-    borderWidth: 1,
-    borderColor: colors.white20,
-    left: '50%',
-    top: '50%',
-    marginLeft: -18,
-    marginTop: -18,
+  tacticalValue: {
+    ...fonts.headlineMd,
+    fontSize: 22,
+    lineHeight: 26,
   },
-  pitchGlow: {
-    position: 'absolute',
-    right: 0,
-    top: 0,
-    bottom: 0,
-    width: '26%',
-    backgroundColor: 'rgba(119,255,95,0.08)',
-  },
-  node: {
-    position: 'absolute',
-    width: 30,
-    height: 30,
-    borderRadius: 999,
-    borderWidth: 1,
-    borderColor: colors.white20,
-    backgroundColor: colors.surfaceContainerHigh,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  nodeActive: {
-    borderColor: colors.primaryFixed,
-    backgroundColor: 'rgba(119,255,95,0.12)',
-  },
-  nodeText: {
-    ...fonts.labelMono,
-    color: colors.onSurface,
-    fontSize: 9,
-  },
-  node0: { left: 16, top: '50%', marginTop: -15 },
-  node1: { left: 36, top: '35%' },
-  node2: { left: 56, top: '20%' },
-  node3: { left: 48, top: '65%' },
-  pitchStats: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 12,
-    justifyContent: 'space-between',
-  },
-  pitchStat: {
+  tacticalLabel: {
     ...fonts.labelMono,
     color: colors.onSurfaceVariant,
     fontSize: 9,
     textTransform: 'uppercase',
+  },
+  formationRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    paddingTop: spacing.sm,
+    borderTopWidth: 1,
+    borderTopColor: colors.white10,
+  },
+  formationSegment: {
+    width: 36,
+    height: 36,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    borderColor: colors.primaryFixed,
+    backgroundColor: 'rgba(101,255,75,0.1)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  formationNumber: {
+    ...fonts.headlineMd,
+    color: colors.primaryFixed,
+    fontSize: 16,
+  },
+  formationLabel: {
+    ...fonts.labelMono,
+    color: colors.onSurfaceVariant,
+    fontSize: 10,
+    textTransform: 'uppercase',
+    flex: 1,
   },
   sideColumn: {
     width: '100%',

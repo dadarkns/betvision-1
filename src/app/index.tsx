@@ -1,24 +1,22 @@
 import React, { useState } from 'react';
-import { Activity, ArrowLeftRight, ChartNoAxesCombined, Radio, Route, Shield, Trophy } from 'lucide-react-native';
+import { Activity, ArrowLeftRight, ChartNoAxesCombined, Radio, Shield, Trophy } from 'lucide-react-native';
 import { MatchCenterScreen } from '../screens/MatchCenterScreen';
 import { LeagueStandingsScreen } from '../screens/LeagueStandingsScreen';
 import { TransferCenterScreen } from '../screens/TransferCenterScreen';
 import { PlayerInsightsScreen } from '../screens/PlayerInsightsScreen';
 import { TeamAnalysisScreen } from '../screens/TeamAnalysisScreen';
 import { ComparisonScreen } from '../screens/ComparisonScreen';
-import { ApiDocsScreen } from '../screens/ApiDocsScreen';
 import { CommandCenterShell, ShellNavItem } from '../components/layout/CommandCenterShell';
 
-type ViewKey = 'match' | 'league' | 'transfers' | 'insights' | 'analysis' | 'comparison' | 'api';
+type ViewKey = 'match' | 'league' | 'transfers' | 'insights' | 'analysis' | 'comparison';
 
 const NAV_ITEMS: ShellNavItem[] = [
-  { key: 'match', label: 'Match Center', icon: <Radio size={14} color="#77ff5f" /> },
-  { key: 'league', label: 'Leagues', icon: <Trophy size={14} color="#77ff5f" /> },
-  { key: 'transfers', label: 'Transfers', icon: <ArrowLeftRight size={14} color="#77ff5f" /> },
-  { key: 'insights', label: 'Insights', icon: <ChartNoAxesCombined size={14} color="#77ff5f" /> },
-  { key: 'analysis', label: 'Team Analysis', icon: <Shield size={14} color="#77ff5f" /> },
-  { key: 'comparison', label: 'Comparison', icon: <Activity size={14} color="#77ff5f" /> },
-  { key: 'api', label: 'Pro API', icon: <Route size={14} color="#77ff5f" /> },
+  { key: 'match', label: 'Match Center', icon: <Radio size={14} color="#65ff4b" /> },
+  { key: 'league', label: 'Leagues', icon: <Trophy size={14} color="#65ff4b" /> },
+  { key: 'transfers', label: 'Transfers', icon: <ArrowLeftRight size={14} color="#65ff4b" /> },
+  { key: 'insights', label: 'Insights', icon: <ChartNoAxesCombined size={14} color="#65ff4b" /> },
+  { key: 'analysis', label: 'Team Analysis', icon: <Shield size={14} color="#65ff4b" /> },
+  { key: 'comparison', label: 'Comparison', icon: <Activity size={14} color="#65ff4b" /> },
 ];
 
 export default function App() {
@@ -38,8 +36,6 @@ export default function App() {
         return <TeamAnalysisScreen />;
       case 'comparison':
         return <ComparisonScreen />;
-      case 'api':
-        return <ApiDocsScreen />;
     }
   };
 

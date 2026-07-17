@@ -117,7 +117,7 @@ export function DashboardScreen() {
               <PulseDot />
               <Text style={styles.liveFeedText}>LIVE FEED</Text>
             </View>
-            <Text style={styles.headerTitle}>STRIKER_DATA</Text>
+            <Text style={styles.headerTitle}>BETVISION</Text>
           </View>
           <Pressable style={styles.premiumPill}>
             <Text style={styles.premiumText}>GO PRO</Text>

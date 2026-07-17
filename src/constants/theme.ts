@@ -1,57 +1,62 @@
+// BetVision – Paleta Dark (tema padrão)
 export const colors = {
-  // Primary
-  primaryFixed: '#77ff5f',
-  primaryFixedDim: '#12e600',
-  onPrimaryFixed: '#012200',
-  primary: '#edffe1',
-  primaryContainer: '#2aff18',
-  onPrimaryContainer: '#067100',
+  // Primária — verde neon BetVision
+  primaryFixed: '#65ff4b',          // verde marca (ativo, destaque, CTA)
+  primaryFixedDim: '#4ed437',       // variação mais sólida
+  onPrimaryFixed: '#071006',        // texto sobre verde primário
+  primary: '#b9f7ad',               // variação clara da primária
+  primaryContainer: '#1d4a1a',      // container verde escuro
+  onPrimaryContainer: '#c8ffc0',    // texto sobre container verde
 
-  // Secondary
-  secondaryContainer: '#00eefc',
-  secondaryFixed: '#7df4ff',
-  secondaryFixedDim: '#00dbe9',
-  onSecondaryContainer: '#00686f',
-  secondary: '#d3fbff',
-  onSecondary: '#00363a',
+  // Secundária — ciano informativo
+  secondaryContainer: '#78e7ff',    // ciano destaque
+  secondaryFixed: '#62dbe8',        // ciano PerformanceShell
+  secondaryFixedDim: '#4acbd8',     // ciano mais sólido
+  onSecondaryContainer: '#001f24',  // texto sobre ciano
+  secondary: '#65ff4b',             // mesmo que primary (BetVision usa verde para ambos)
+  onSecondary: '#071006',
 
-  // Surface
-  surface: '#111317',
-  surfaceContainer: '#1e2024',
-  surfaceContainerHigh: '#282a2e',
-  surfaceContainerHighest: '#333539',
-  surfaceContainerLow: '#1a1c20',
-  surfaceContainerLowest: '#0c0e12',
-  surfaceDim: '#111317',
-  surfaceBright: '#37393e',
+  // Superfícies — escala de fundos escuros
+  surface: '#12151b',               // cards, paineis principais
+  surfaceContainer: '#1a1e25',      // superfície alt / container
+  surfaceContainerHigh: '#1c2027',  // paineis ativos/destacados
+  surfaceContainerHighest: '#252a33',
+  surfaceContainerLow: '#171b21',   // elementos elevados / raised
+  surfaceContainerLowest: '#0c0f12',// fundo do shell / nav
+  surfaceDim: '#12151b',
+  surfaceBright: '#2b3038',
 
-  // On Surface
-  onSurface: '#e2e2e8',
-  onSurfaceVariant: '#baccb0',
-  background: '#111317',
-  onBackground: '#e2e2e8',
+  // Texto
+  onSurface: '#eef0f3',             // texto principal
+  onSurfaceVariant: '#b9c8b3',      // texto claro secundário (pale)
+  background: '#0b0d10',            // fundo geral das telas
+  onBackground: '#eef0f3',
 
-  // Error
-  error: '#ffb4ab',
-  errorContainer: '#93000a',
-  onError: '#690005',
+  // Semânticos
+  danger: '#ff7b7b',                // erros, alertas, risco
+  live: '#ff6b6b',                  // status ao vivo
+  info: '#78e7ff',                  // informação/estados neutros ativos
+  muted: '#727b70',                 // texto apagado
+  silver: '#727b70',                // texto auxiliar
 
-  // Tertiary
-  tertiary: '#f9f9ff',
-  tertiaryFixed: '#e1e2ea',
-  tertiaryFixedDim: '#c4c6ce',
-  onTertiaryFixedVariant: '#44474d',
+  // Error (compatibilidade)
+  error: '#ff7b7b',
+  errorContainer: '#5a1212',
+  onError: '#2a0000',
 
-  // Outline
-  outline: '#85967c',
-  outlineVariant: '#3b4b36',
+  // Outline / bordas
+  outline: '#2b3038',               // bordas e divisórias
+  outlineVariant: '#1f2428',
 
-  // Glass
-  glassCard: 'rgba(26, 29, 37, 0.85)',
-  glassBorder: 'rgba(255, 255, 255, 0.1)',
+  // Brilho / sombra
+  glow: 'rgba(101, 255, 75, 0.2)',  // brilho verde suave
+
+  // Glass / opacidades
+  glassCard: 'rgba(18, 21, 27, 0.88)',
+  glassBorder: 'rgba(101, 255, 75, 0.1)',
   white5: 'rgba(255, 255, 255, 0.05)',
-  white10: 'rgba(255, 255, 255, 0.10)',
-  white20: 'rgba(255, 255, 255, 0.20)',
+  white10: 'rgba(255, 255, 255, 0.08)',
+  white20: 'rgba(255, 255, 255, 0.16)',
 };
 
 export const fonts = {

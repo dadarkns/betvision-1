@@ -37,7 +37,7 @@ function ShellChip({ label, active, onPress, icon }: {
 }
 
 export function CommandCenterShell({
-  brand = 'STRIKER_DATA',
+  brand = 'BETVISION',
   tagline = 'Elite analytics',
   title,
   subtitle,
@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
     borderRadius: 280,
     left: -100,
     top: -80,
-    backgroundColor: 'rgba(18, 230, 0, 0.08)',
+    backgroundColor: 'rgba(101, 255, 75, 0.07)',
   },
   backgroundGlowRight: {
     position: 'absolute',
@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
     borderRadius: 240,
     right: -90,
     top: 120,
-    backgroundColor: 'rgba(0, 238, 252, 0.07)',
+    backgroundColor: 'rgba(120, 231, 255, 0.05)',
   },
   sidebar: {
     width: 236,
@@ -272,7 +272,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white5,
   },
   navItemActive: {
-    backgroundColor: 'rgba(119, 255, 95, 0.14)',
+    backgroundColor: 'rgba(101, 255, 75, 0.12)',
     borderLeftWidth: 3,
     borderLeftColor: colors.primaryFixed,
   },
@@ -408,8 +408,8 @@ const styles = StyleSheet.create({
     opacity: 0.86,
   },
   shellChipActive: {
-    borderColor: `${colors.primaryFixed}66`,
-    backgroundColor: 'rgba(119, 255, 95, 0.12)',
+    borderColor: `${colors.primaryFixed}55`,
+    backgroundColor: 'rgba(101, 255, 75, 0.1)',
   },
   shellChipText: {
     ...fonts.labelMono,
