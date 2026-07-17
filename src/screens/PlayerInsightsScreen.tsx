@@ -13,7 +13,7 @@ function RadarChart({ skills }: { skills: typeof playerVinicius.skills }) {
   const cy = size / 2;
   const r = 60;
   const attrs = ['pace', 'dribbling', 'finishing', 'passing', 'physical'] as const;
-  const labels = ['Pace', 'Dribbling', 'Finishing', 'Passing', 'Physical'];
+  const labels = ['Velocidade', 'Drible', 'Finalização', 'Passe', 'Físico'];
 
   const points = attrs.map((key, index) => {
     const angle = (index * 2 * Math.PI) / attrs.length - Math.PI / 2;
@@ -62,13 +62,13 @@ export function PlayerInsightsScreen() {
   return (
     <View style={styles.page}>
       <ScreenHeader
-        kicker="Insights"
+        kicker="Desempenho"
         title={player.name}
         subtitle="Perfil de habilidade, forma recente e leitura de desempenho individual."
         action={(
           <View style={styles.badges}>
             <Pill label="Real Madrid" active />
-            <Pill label="LW | Brazil" />
+            <Pill label="PE | Brasil" />
           </View>
         )}
       />
@@ -83,7 +83,7 @@ export function PlayerInsightsScreen() {
           <View style={styles.heroCopy}>
             <Text style={styles.heroPosition}>Ponta esquerda / 23 anos</Text>
             <Text style={styles.heroName}>Vinicius <Text style={styles.heroAccent}>Junior</Text></Text>
-            <Text style={styles.heroDesc}>Elite performance profile built for direct duels, acceleration and final third impact.</Text>
+            <Text style={styles.heroDesc}>Perfil de elite para duelos diretos, aceleração e impacto no terço final.</Text>
           </View>
           <View style={styles.heroMetrics}>
             <StatTile label="Gols" value={player.goals} accent={colors.primaryFixed} />
@@ -94,15 +94,15 @@ export function PlayerInsightsScreen() {
         </GlassCard>
 
         <Grid style={styles.secondaryGrid}>
-          <StatTile label="Form" value="W W D W W" hint="ultimas 5" accent={colors.primaryFixed} />
-          <StatTile label="Top speed" value={`${player.performance.topSpeedKmh} km/h`} hint="pico recente" accent={colors.secondaryContainer} />
-          <StatTile label="Duels won" value={`${player.performance.duelsWon}%`} hint="impacto fisico" accent={colors.onSurface} />
-          <StatTile label="Dribbles" value={`${player.performance.dribblesCompleted}%`} hint="volume de 1v1" accent={colors.primaryFixed} />
+          <StatTile label="Forma" value="V V E V V" hint="últimas 5" accent={colors.primaryFixed} />
+          <StatTile label="Vel. máx." value={`${player.performance.topSpeedKmh} km/h`} hint="pico recente" accent={colors.secondaryContainer} />
+          <StatTile label="Duelos" value={`${player.performance.duelsWon}%`} hint="impacto físico" accent={colors.onSurface} />
+          <StatTile label="Dribles" value={`${player.performance.dribblesCompleted}%`} hint="volume de 1v1" accent={colors.primaryFixed} />
         </Grid>
       </View>
 
       <View style={styles.tabsRow}>
-        <Pill label="Estatisticas" active={tab === 'stats'} />
+        <Pill label="Estatísticas" active={tab === 'stats'} />
         <Pill label="Partidas" active={tab === 'matches'} />
       </View>
 
@@ -125,7 +125,7 @@ export function PlayerInsightsScreen() {
           </GlassCard>
 
           <GlassCard style={styles.formCard}>
-            <SectionLabel title="Performance recente" action="Last 5" />
+            <SectionLabel title="Performance recente" action="Últimas 5" />
             <View style={styles.progressList}>
               <View style={styles.progressRow}><Text style={styles.progressLabel}>Duelos ganhos</Text><MiniBar left={player.performance.duelsWon} right={100 - player.performance.duelsWon} /><Text style={styles.progressValue}>{player.performance.duelsWon}%</Text></View>
               <View style={styles.progressRow}><Text style={styles.progressLabel}>Dribles completos</Text><MiniBar left={player.performance.dribblesCompleted} right={100 - player.performance.dribblesCompleted} leftColor={colors.secondaryContainer} /><Text style={styles.progressValue}>{player.performance.dribblesCompleted}%</Text></View>
@@ -142,7 +142,7 @@ export function PlayerInsightsScreen() {
                 <Text style={styles.matchDate}>{match.date}</Text>
                 <View style={styles.matchInfo}>
                   <Text style={styles.matchTeams}>{match.home} vs {match.away}</Text>
-                  <Text style={styles.matchMeta}>{match.score} | {match.goals} goals | {match.assists} assists</Text>
+                  <Text style={styles.matchMeta}>{match.score} | {match.goals} gols | {match.assists} assistências</Text>
                 </View>
                 <View style={styles.matchRating}><Text style={styles.matchRatingText}>{match.rating.toFixed(1)}</Text></View>
               </View>
@@ -152,10 +152,10 @@ export function PlayerInsightsScreen() {
       )}
 
       <Grid>
-        <StatTile label="Shot share" value="High" hint="inside box" accent={colors.primaryFixed} />
-        <StatTile label="Passing" value="72" hint="completion" accent={colors.secondaryContainer} />
-        <StatTile label="Pressure" value="Elite" hint="ball carrying" accent={colors.onSurface} />
-        <StatTile label="Status" value="Verified" hint="athlete" accent={colors.primaryFixed} />
+        <StatTile label="Chutes" value="Alto" hint="dentro da área" accent={colors.primaryFixed} />
+        <StatTile label="Passe" value="72" hint="conclusão" accent={colors.secondaryContainer} />
+        <StatTile label="Pressão" value="Elite" hint="condusão de bola" accent={colors.onSurface} />
+        <StatTile label="Status" value="Verificado" hint="atleta" accent={colors.primaryFixed} />
       </Grid>
     </View>
   );

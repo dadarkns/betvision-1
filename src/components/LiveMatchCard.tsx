@@ -49,7 +49,7 @@ export function LiveMatchCard({ match, onPress }: LiveMatchCardProps) {
               <Animated.View style={[styles.liveDot, { opacity: pulseAnim }]} />
             )}
             <Text style={[styles.statusText, isLive ? styles.liveText : isHalftime ? styles.halftimeText : styles.upcomingText]}>
-              {isLive ? `${match.minute}'` : isHalftime ? 'HT' : match.minute}
+              {isLive ? `${match.minute}'` : isHalftime ? 'INT' : match.minute}
             </Text>
           </View>
           <Text style={styles.league}>{match.league}</Text>

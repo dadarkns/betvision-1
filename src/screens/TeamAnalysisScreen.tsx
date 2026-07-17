@@ -21,13 +21,13 @@ export function TeamAnalysisScreen() {
   return (
     <View style={styles.page}>
       <ScreenHeader
-        kicker="Team Analysis"
+        kicker="Análise de Time"
         title="Real Madrid"
         subtitle="Estrutura tática, volume de posse e forma recente em alta densidade."
         action={(
           <View style={styles.pillRow}>
             <Pill label="La Liga" active />
-            <Pill label="Live data" />
+            <Pill label="Dados ao vivo" />
           </View>
         )}
       />
@@ -38,8 +38,8 @@ export function TeamAnalysisScreen() {
             <View style={styles.logoMark} />
           </View>
           <View style={styles.heroCopy}>
-            <Text style={styles.heroTitle}>Elite performance profile for the 2023/24 season.</Text>
-            <Text style={styles.heroDesc}>Tactical dominance established through high-press transitions and vertical depth optimization.</Text>
+            <Text style={styles.heroTitle}>Perfil de performance de elite para a temporada 2023/24.</Text>
+            <Text style={styles.heroDesc}>Dominância tática estabelecida por pressão alta e profundidade vertical.</Text>
           </View>
           <View style={styles.gradeRing}>
             <Text style={styles.gradeValue}>8.5</Text>
@@ -48,16 +48,16 @@ export function TeamAnalysisScreen() {
         </View>
 
         <View style={styles.heroMetrics}>
-          <StatTile label="Win prob" value="78.4%" accent={colors.primaryFixed} />
-          <StatTile label="xG / match" value="2.42" accent={colors.secondaryContainer} />
+          <StatTile label="Prob. vitória" value="78.4%" accent={colors.primaryFixed} />
+          <StatTile label="xG / jogo" value="2.42" accent={colors.secondaryContainer} />
           <StatTile label="PPDA" value="8.1" accent={colors.onSurface} />
-          <StatTile label="Pressing" value="High" accent={colors.primaryFixed} />
+          <StatTile label="Pressão" value="Alta" accent={colors.primaryFixed} />
         </View>
       </GlassCard>
 
       <View style={styles.mainGrid}>
         <GlassCard style={styles.boardCard}>
-          <SectionLabel title="Tactical Board" action="Attack" />
+          <SectionLabel title="Painel Tático" action="Ataque" />
           <View style={styles.tacticalGrid}>
             {[
               { label: 'Posse de bola', value: '59.2%', accent: colors.primaryFixed },
@@ -85,7 +85,7 @@ export function TeamAnalysisScreen() {
 
         <View style={styles.sideColumn}>
           <GlassCard style={styles.performersCard}>
-            <SectionLabel title="Top performers" action="View full squad" />
+            <SectionLabel title="Melhores desempenhos" action="Ver elenco" />
             {performers.map(item => (
               <View key={item.name} style={styles.performerRow}>
                 <View style={[styles.performerIcon, { borderColor: item.accent }]}><Users size={14} color={item.accent} /></View>
@@ -98,7 +98,7 @@ export function TeamAnalysisScreen() {
           </GlassCard>
 
           <GlassCard style={styles.fixturesCard}>
-            <SectionLabel title="Upcoming fixtures" />
+            <SectionLabel title="Próximos jogos" />
             {fixtures.map(item => (
               <View key={item.matchup} style={styles.fixtureRow}>
                 <View style={styles.fixtureMeta}>
@@ -113,18 +113,18 @@ export function TeamAnalysisScreen() {
           <GlassCard style={styles.insightCard} highlighted>
             <View style={styles.insightTop}>
               <Sparkles size={16} color={colors.primaryFixed} />
-              <Text style={styles.insightTitle}>Tactical insight</Text>
+              <Text style={styles.insightTitle}>Análise tática</Text>
             </View>
-            <Text style={styles.insightText}>Madrid is overloading through Vini Jr and Bellingham creating a 4.2 high-value chances per match.</Text>
+            <Text style={styles.insightText}>Madrid sobrecarrega pelo lado esquerdo com Vini Jr e Bellingham criando 4.2 chances de alto valor por partida.</Text>
           </GlassCard>
         </View>
       </View>
 
       <Grid>
-        <StatTile label="Squad depth" value="Elite" hint="4 formations" accent={colors.primaryFixed} />
-        <StatTile label="Recent form" value="W W D W W" hint="last 5" accent={colors.secondaryContainer} />
-        <StatTile label="Avg shot" value="16.8m" hint="distance" accent={colors.onSurface} />
-        <StatTile label="Pressure" value="High" hint="ball recovery" accent={colors.primaryFixed} />
+        <StatTile label="Elenco" value="Elite" hint="4 formações" accent={colors.primaryFixed} />
+        <StatTile label="Forma recente" value="V V E V V" hint="últimas 5" accent={colors.secondaryContainer} />
+        <StatTile label="Chute méd." value="16.8m" hint="distância" accent={colors.onSurface} />
+        <StatTile label="Pressão" value="Alta" hint="recuperação de bola" accent={colors.primaryFixed} />
       </Grid>
     </View>
   );

@@ -60,7 +60,7 @@ function CompareRadar() {
       })}
       <Polygon points={polygon(a)} fill="rgba(119,255,95,0.18)" stroke={colors.primaryFixed} strokeWidth={1.5} />
       <Polygon points={polygon(b)} fill="rgba(0,238,252,0.15)" stroke={colors.secondaryContainer} strokeWidth={1.5} />
-      {['PACE', 'SHOOT', 'PASS', 'DRIBBLE', 'DEFENSE'].map((label, index) => {
+      {['VELOCIDADE', 'FINALIZ.', 'PASSE', 'DRIBLE', 'DEFESA'].map((label, index) => {
         const angle = (index * 2 * Math.PI) / axes.length - Math.PI / 2;
         return (
           <SvgText
@@ -83,13 +83,13 @@ export function ComparisonScreen() {
   return (
     <View style={styles.page}>
       <ScreenHeader
-        kicker="Comparison"
-        title="Player Comparison"
-        subtitle="Lado a lado, radar skill profile e leitura tecnica de vantagem." 
+        kicker="Comparação"
+        title="Comparação de Jogadores"
+        subtitle="Lado a lado, radar de habilidades e leitura técnica de vantagem."
         action={(
           <View style={styles.pillRow}>
             <Pill label="LaLiga / Champions League" active />
-            <Pill label="Search another player..." />
+            <Pill label="Buscar outro jogador..." />
           </View>
         )}
       />
@@ -110,7 +110,7 @@ export function ComparisonScreen() {
         </GlassCard>
 
         <GlassCard style={styles.radarCard}>
-          <SectionLabel title="Skill profile" action="Head to head" />
+          <SectionLabel title="Perfil de habilidades" action="Frente a frente" />
           <View style={styles.radarWrap}>
             <CompareRadar />
             <View style={styles.legendList}>
@@ -120,7 +120,7 @@ export function ComparisonScreen() {
           </View>
           <View style={styles.verdictBox}>
             <ChartNoAxesCombined size={14} color={colors.primaryFixed} />
-            <Text style={styles.verdictText}>Mbappe is more clinical (+12% finishing)</Text>
+            <Text style={styles.verdictText}>Mbappe é mais clínico (+12% finalização)</Text>
           </View>
         </GlassCard>
 
@@ -140,23 +140,23 @@ export function ComparisonScreen() {
       </View>
 
       <GlassCard style={styles.tableCard}>
-        <SectionLabel title="Advanced performance metrics" action="All competitions" />
+        <SectionLabel title="Métricas avançadas de desempenho" action="Todas as competições" />
         <View style={styles.tableHead}>
-          <Text style={[styles.col, styles.colMetric]}>Statistic</Text>
+          <Text style={[styles.col, styles.colMetric]}>Estatística</Text>
           <Text style={[styles.col, styles.colLeft]}>Vini Jr.</Text>
-          <Text style={styles.col}>Diff</Text>
-          <Text style={[styles.col, styles.colRight]}>K. Mbappe</Text>
+          <Text style={styles.col}>Dif.</Text>
+          <Text style={[styles.col, styles.colRight]}>K. Mbappé</Text>
         </View>
         {[
-          { metric: 'Expected Goals (xG)', left: '16.42', diff: '-', right: '21.85' },
-          { metric: 'Successful Dribbles', left: '4.2 /90m', diff: '+1.4', right: '2.8 /90m' },
-          { metric: 'Shots on Target %', left: '41.2%', diff: '-7.1%', right: '48.3%' },
-          { metric: 'Progressive Carries', left: '124', diff: '+32', right: '92' },
-          { metric: 'Key Passes', left: '2.1 /90m', diff: 'Equal', right: '2.1 /90m' },
+          { metric: 'Gols Esperados (xG)', left: '16.42', diff: '-', right: '21.85' },
+          { metric: 'Dribles bem-sucedidos', left: '4.2 /90m', diff: '+1.4', right: '2.8 /90m' },
+          { metric: '% Chutes no alvo', left: '41.2%', diff: '-7.1%', right: '48.3%' },
+          { metric: 'Conduções progressivas', left: '124', diff: '+32', right: '92' },
+          { metric: 'Passes-chave', left: '2.1 /90m', diff: 'Igual', right: '2.1 /90m' },
         ].map(row => (
           <View key={row.metric} style={styles.tableRow}>
             <Text style={[styles.col, styles.colMetric]}>{row.metric}</Text>
-            <Text style={[styles.col, styles.colLeft, row.metric === 'Expected Goals (xG)' && styles.strongLeft]}>{row.left}</Text>
+            <Text style={[styles.col, styles.colLeft, row.metric === 'Gols Esperados (xG)' && styles.strongLeft]}>{row.left}</Text>
             <Text style={[styles.col, styles.colDiff]}>{row.diff}</Text>
             <Text style={[styles.col, styles.colRight]}>{row.right}</Text>
           </View>
@@ -164,10 +164,10 @@ export function ComparisonScreen() {
       </GlassCard>
 
       <Grid>
-        <StatTile label="Explosive dribbling" value="Vinicius" hint="live advantage" accent={colors.primaryFixed} />
-        <StatTile label="Clinical finishing" value="Mbappe" hint="shot quality" accent={colors.secondaryContainer} />
-        <StatTile label="Projection" value="98th" hint="attacking percentile" accent={colors.onSurface} />
-        <StatTile label="Win prob" value="74%" hint="with both in form" accent={colors.primaryFixed} />
+        <StatTile label="Drible explosivo" value="Vinicius" hint="vantagem ao vivo" accent={colors.primaryFixed} />
+        <StatTile label="Finalização clínica" value="Mbappe" hint="qualidade de chute" accent={colors.secondaryContainer} />
+        <StatTile label="Projeção" value="98º" hint="percentil ofensivo" accent={colors.onSurface} />
+        <StatTile label="Prob. vitória" value="74%" hint="ambos em forma" accent={colors.primaryFixed} />
       </Grid>
     </View>
   );

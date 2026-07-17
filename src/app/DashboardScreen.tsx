@@ -115,12 +115,12 @@ export function DashboardScreen() {
           <View style={styles.headerLeft}>
             <View style={styles.liveFeed}>
               <PulseDot />
-              <Text style={styles.liveFeedText}>LIVE FEED</Text>
+              <Text style={styles.liveFeedText}>AO VIVO</Text>
             </View>
             <Text style={styles.headerTitle}>BETVISION</Text>
           </View>
           <Pressable style={styles.premiumPill}>
-            <Text style={styles.premiumText}>GO PRO</Text>
+            <Text style={styles.premiumText}>SEJA PRO</Text>
           </Pressable>
         </View>
 
