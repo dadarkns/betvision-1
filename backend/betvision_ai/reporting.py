@@ -101,6 +101,7 @@ def period_report(predictions: list[PredictionOutput], summary: dict[str, Any]) 
         "Fontes: "
         f"{sources.get('saved', 0)} salvas, "
         f"{sources.get('api_predictions', 0)} com features da API, "
+        f"{sources.get('api_empty', 0)} API sem forma útil, "
         f"{sources.get('fixture_only', 0)} só calendário"
     )
     if not predictions:

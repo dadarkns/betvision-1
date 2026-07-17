@@ -15,6 +15,7 @@ if hasattr(sys.stderr, "reconfigure"):
     sys.stderr.reconfigure(encoding="utf-8")
 
 from betvision_ai.api import ApiClient, RequestBudget
+from betvision_ai.automation import AutomationRunner
 from betvision_ai.backtesting import run_historical_backtest
 from betvision_ai.collection import collect_world_cup, prepare_datasets
 from betvision_ai.config import UsageLedger, get_settings
@@ -149,7 +150,7 @@ def daily(
         force_odds=force_odds,
     )
     if not predictions:
-        console.print("[yellow]Nenhum jogo da Copa do Mundo disponível nessa data.[/yellow]")
+        console.print("[yellow]Nenhum jogo disponivel nessa data.[/yellow]")
     for prediction in predictions:
         prediction_report(prediction)
     if failures:
@@ -248,6 +249,17 @@ def status(
         "local_requests_today": ledger.used_today(),
         "local_daily_limit": settings.daily_limit,
         "protected_reserve": settings.reserve_requests,
+        "include_all_leagues": settings.include_all_leagues,
+        "league_ids": list(settings.prediction_league_ids),
+        "automation": {
+            "enabled": settings.auto_enabled,
+            "run_on_startup": settings.auto_run_on_startup,
+            "interval_minutes": settings.auto_interval_minutes,
+            "lookahead_days": settings.auto_lookahead_days,
+            "backfill_days": settings.auto_backfill_days,
+            "budget": settings.auto_budget,
+            "web_research": settings.auto_web_research,
+        },
         "model_exists": (settings.data_dir / "models" / "latest.joblib").exists(),
         "odds_api_configured": settings.odds_configured,
         "data_dir": str(settings.data_dir),
@@ -269,11 +281,31 @@ def status(
 
 
 @app.command()
+def auto(
+    date_value: Annotated[str | None, typer.Option("--date", help="Data unica YYYY-MM-DD.")] = None,
+    force_odds: Annotated[
+        bool,
+        typer.Option(help="Ignora o cache de odds na rodada automatica."),
+    ] = False,
+) -> None:
+    """Executa uma rodada autonoma de busca, IA, pesquisa web e settlement."""
+    settings = get_settings()
+    result = AutomationRunner(settings).run_once(
+        target_date=_date(date_value) if date_value else None,
+        force_odds=force_odds,
+    )
+    console.print_json(data=result)
+
+
+@app.command()
 def serve(
     host: Annotated[str, typer.Option(help="Host local do servidor HTTP de teste.")] = "127.0.0.1",
     port: Annotated[int, typer.Option(help="Porta local do servidor HTTP de teste.")] = 8765,
 ) -> None:
     """Expõe previsões salvas para o frontend em modo local de teste."""
+    settings = get_settings()
     console.print(f"[green]BetVision AI servindo em http://{host}:{port}[/green]")
+    if settings.auto_enabled:
+        console.print("[green]Atualizacao automatica ativada.[/green]")
     console.print("[yellow]Use somente em desenvolvimento local. Pressione Ctrl+C para encerrar.[/yellow]")
-    serve_predictions(get_settings(), host, port)
+    serve_predictions(settings, host, port)

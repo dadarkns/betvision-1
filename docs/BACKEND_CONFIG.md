@@ -42,6 +42,14 @@ npm run web
 | `EXPO_PUBLIC_REAL_STATS_CACHE_VERSION` | Nao | Dev | Versao do cache local. Incremente quando mudar o mapeamento de dados. |
 | `EXPO_PUBLIC_BETVISION_AI_BASE_URL` | Para teste IA local | Backend | URL do servidor local Python, ex.: `http://127.0.0.1:8765`. |
 | `EXPO_PUBLIC_BETVISION_AI_TIMEOUT_MS` | Nao | Dev | Timeout das chamadas ao backend local de IA em milissegundos. |
+| `BETVISION_AI_INCLUDE_ALL_LEAGUES` | Nao | Backend | `1` por padrao para prever todos os campeonatos retornados pela API. Use `0` para filtrar. |
+| `BETVISION_AI_LEAGUE_IDS` | Nao | Backend | Lista de ligas separadas por virgula quando `BETVISION_AI_INCLUDE_ALL_LEAGUES=0`. |
+| `BETVISION_AI_AUTO_ENABLED` | Nao | Backend | Liga/desliga o worker autonomo do backend local. Padrao: `1`. |
+| `BETVISION_AI_AUTO_INTERVAL_MINUTES` | Nao | Backend | Intervalo entre atualizacoes automaticas. Padrao: `30`. |
+| `BETVISION_AI_AUTO_LOOKAHEAD_DAYS` | Nao | Backend | Dias futuros buscados automaticamente. Padrao: `7`. |
+| `BETVISION_AI_AUTO_BACKFILL_DAYS` | Nao | Backend | Dias passados reprocessados para settlement. Padrao: `2`. |
+| `BETVISION_AI_AUTO_BUDGET` | Nao | Backend | Orcamento de chamadas por rodada automatica. Padrao: `60`. |
+| `BETVISION_AI_AUTO_WEB_RESEARCH` | Nao | Backend | Ativa pesquisa web complementar com cache para enriquecer a analise. Padrao: `1`. |
 
 ## Regras da Equipe
 
@@ -68,13 +76,19 @@ Servicos que consomem essa configuracao:
 
 ## Teste com Backend Python Local
 
-Gere previsoes:
+Para testar uma rodada autonoma:
+
+```powershell
+backend\.venv\Scripts\python -m betvision_ai auto
+```
+
+Ou gere previsoes de um periodo especifico:
 
 ```powershell
 backend\.venv\Scripts\python -m betvision_ai upcoming --start-date 2026-06-26 --days 2 --budget 20
 ```
 
-Suba o servidor local de leitura:
+Suba o servidor local. Ele tambem inicia a atualizacao automatica quando `BETVISION_AI_AUTO_ENABLED=1`:
 
 ```powershell
 backend\.venv\Scripts\python -m betvision_ai serve

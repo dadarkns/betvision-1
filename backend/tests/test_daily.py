@@ -152,7 +152,8 @@ def test_period_predictions_fetches_range_and_reuses_cache(settings):
     assert summary["fixtures"] == second_summary["fixtures"] == 2
     assert summary["sources"]["api_predictions"] == 2
     assert second_summary["sources"]["saved"] == 2
-    assert calls_after_first == 3
+    assert calls_after_first == 9
+    assert summary["calendar_mode"] == "date-by-date"
     assert len(calls) == calls_after_first
     assert (settings.data_dir / "outputs" / "predictions" / "2026-06-26.json").exists()
     assert (settings.data_dir / "outputs" / "predictions" / "2026-06-28.json").exists()

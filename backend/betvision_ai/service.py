@@ -24,6 +24,8 @@ from betvision_ai.odds import (
 )
 from betvision_ai.schemas import MatchInput, PredictionOutput
 from betvision_ai.simulation import simulate_match
+from betvision_ai.web_fixtures import WebFixtureClient
+from betvision_ai.web_research import WebResearchClient, enrich_prediction_with_web_research
 
 
 def _load_json(path: Path, default: Any) -> Any:
@@ -35,6 +37,52 @@ def _load_json(path: Path, default: Any) -> Any:
 def _write_json(path: Path, payload: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+def _fixture_allowed(settings: Settings, fixture: dict[str, Any]) -> bool:
+    league_ids = settings.prediction_league_ids
+    if not league_ids:
+        return True
+    return int(fixture.get("league", {}).get("id", 0)) in league_ids
+
+
+def _prediction_is_fresh(row: dict[str, Any], bundle: ModelBundle) -> bool:
+    return (
+        bool(row.get("user_analysis"))
+        and row.get("model_version") == bundle.version
+        and bool(row.get("fixture_meta"))
+        and bool(row.get("coverage", {}).get("model_domain"))
+        and row.get("coverage", {}).get("calibration_version") == "feature-quality-v2"
+        and (
+            not bundle.models
+            or bool(row.get("coverage", {}).get("validation_mae"))
+        )
+    )
+
+
+def _enrich_predictions_with_web_research(
+    settings: Settings,
+    predictions: list[PredictionOutput],
+    failures: list[str],
+    *,
+    enabled: bool,
+) -> list[PredictionOutput]:
+    if not enabled:
+        return predictions
+    client = WebResearchClient(settings)
+    enriched: list[PredictionOutput] = []
+    limit = max(0, settings.auto_web_research_limit)
+    for index, prediction in enumerate(predictions):
+        if index >= limit:
+            enriched.append(prediction)
+            continue
+        try:
+            research = client.search_match(prediction)
+            enriched.append(enrich_prediction_with_web_research(prediction, research))
+        except Exception as exc:  # pragma: no cover - best effort enrichment
+            failures.append(f"{prediction.fixture_id}: pesquisa web indisponivel ({exc})")
+            enriched.append(prediction)
+    return enriched
 
 
 def predict_one(
@@ -61,6 +109,7 @@ def daily_predictions(
     *,
     include_odds: bool = True,
     force_odds: bool = False,
+    include_web_research: bool | None = None,
 ) -> tuple[list[PredictionOutput], list[str]]:
     output_path = settings.data_dir / "outputs" / "predictions" / f"{target_date.isoformat()}.json"
     existing_payload = _load_json(output_path, {"predictions": []})
@@ -69,26 +118,43 @@ def daily_predictions(
         for item in existing_payload.get("predictions", [])
         if item.get("fixture_id") is not None
     }
-    fixture_payload = client.get(
-        "fixtures",
-        {"date": target_date.isoformat(), "timezone": settings.timezone},
-        max_age_seconds=6 * 60 * 60,
-        namespace="daily",
-    )
+    fixture_payload: dict[str, Any]
+    calendar_failures: list[str] = []
+    try:
+        fixture_payload = client.get(
+            "fixtures",
+            {"date": target_date.isoformat(), "timezone": settings.timezone},
+            max_age_seconds=6 * 60 * 60,
+            namespace="daily",
+        )
+    except (BudgetExceeded, RateLimitError, ApiError) as exc:
+        if not settings.web_fixtures_enabled:
+            raise
+        fixture_payload = {"response": WebFixtureClient(settings).fetch_date(target_date)}
+        calendar_failures.append(f"Calendario oficial indisponivel; usando fonte web ({exc})")
     fixtures = [
         item
         for item in fixture_payload.get("response", [])
-        if int(item.get("league", {}).get("id", 0)) in settings.prediction_league_ids
+        if _fixture_allowed(settings, item)
     ]
+    if not fixtures and settings.web_fixtures_enabled:
+        fixtures = [
+            item
+            for item in WebFixtureClient(settings).fetch_date(target_date)
+            if _fixture_allowed(settings, item)
+        ]
     predictions: list[PredictionOutput] = []
-    failures: list[str] = []
+    failures: list[str] = list(calendar_failures)
+    web_research_enabled = settings.auto_web_research if include_web_research is None else include_web_research
     for fixture in fixtures:
         fixture_id = int(fixture["fixture"]["id"])
         if (
             fixture_id in existing
-            and existing[fixture_id].get("user_analysis")
-            and existing[fixture_id].get("model_version") == bundle.version
-            and existing[fixture_id].get("fixture_meta")
+            and _prediction_is_fresh(existing[fixture_id], bundle)
+            and (
+                not web_research_enabled
+                or existing[fixture_id].get("user_analysis", {}).get("web_research")
+            )
         ):
             predictions.append(PredictionOutput.model_validate(existing[fixture_id]))
             continue
@@ -119,6 +185,13 @@ def daily_predictions(
             failures.append(f"{fixture_id}: {exc}")
         match = match_from_api_fixture(fixture, prediction_row)
         predictions.append(predict_one(settings, bundle, match))
+
+    predictions = _enrich_predictions_with_web_research(
+        settings,
+        predictions,
+        failures,
+        enabled=web_research_enabled,
+    )
 
     odds_status: dict[str, Any] = {
         "configured": settings.odds_configured,
@@ -270,7 +343,10 @@ def period_predictions(
         except ValueError:
             range_recently_blocked = False
 
-    fallback_to_daily = range_recently_blocked
+    configured_leagues = settings.prediction_league_ids
+    fallback_to_daily = range_recently_blocked or len(configured_leagues) != 1
+    if len(configured_leagues) != 1:
+        calendar_mode = "date-by-date"
     if range_recently_blocked:
         failures.append(
             "Consulta por intervalo pulada: plano Free bloqueou esse modo recentemente; "
@@ -282,7 +358,7 @@ def period_predictions(
             payload = client.get(
                 "fixtures",
                 {
-                    "league": settings.world_cup_league_id,
+                    "league": configured_leagues[0],
                     "season": season,
                     "from": start_date.isoformat(),
                     "to": end_date.isoformat(),
@@ -294,7 +370,7 @@ def period_predictions(
             fixtures = [
                 item
                 for item in payload.get("response", [])
-                if int(item.get("league", {}).get("id", 0)) == settings.world_cup_league_id
+                if _fixture_allowed(settings, item)
                 and start_date <= _fixture_local_date(item) <= end_date
             ]
         except ApiError:
@@ -338,10 +414,16 @@ def period_predictions(
             fixtures.extend(
                 item
                 for item in day_payload.get("response", [])
-                if int(item.get("league", {}).get("id", 0)) == settings.world_cup_league_id
+                if _fixture_allowed(settings, item)
                 and start_date <= _fixture_local_date(item) <= end_date
             )
             current += timedelta(days=1)
+    fixtures = list(
+        {
+            int(item["fixture"]["id"]): item
+            for item in fixtures
+        }.values()
+    )
     fixtures.sort(key=lambda item: str(item.get("fixture", {}).get("date") or ""))
 
     dates = {_fixture_local_date(item) for item in fixtures}
@@ -349,15 +431,14 @@ def period_predictions(
 
     predictions: list[PredictionOutput] = []
     details_enabled = True
-    source_counts = {"saved": 0, "api_predictions": 0, "fixture_only": 0}
+    source_counts = {"saved": 0, "api_predictions": 0, "api_empty": 0, "fixture_only": 0}
     for fixture in fixtures:
         fixture_id = int(fixture["fixture"]["id"])
         existing_row = existing.get(fixture_id)
         if (
             existing_row
             and existing_row.get("coverage", {}).get("raw_prediction_features")
-            and existing_row.get("user_analysis")
-            and existing_row.get("model_version") == bundle.version
+            and _prediction_is_fresh(existing_row, bundle)
         ):
             predictions.append(PredictionOutput.model_validate(existing[fixture_id]))
             source_counts["saved"] += 1
@@ -373,7 +454,6 @@ def period_predictions(
                     namespace="period",
                 )
                 prediction_row = (detail_payload.get("response") or [None])[0]
-                source_counts["api_predictions"] += 1
             except (RateLimitError, BudgetExceeded) as exc:
                 failures.append(f"{fixture_id}: detalhes adiados ({exc})")
                 details_enabled = False
@@ -381,21 +461,24 @@ def period_predictions(
                     predictions.append(PredictionOutput.model_validate(existing_row))
                     source_counts["saved"] += 1
                     continue
-                source_counts["fixture_only"] += 1
             except ApiError as exc:
                 failures.append(f"{fixture_id}: detalhes indisponíveis ({exc})")
-                source_counts["fixture_only"] += 1
         else:
             if existing_row:
                 predictions.append(PredictionOutput.model_validate(existing_row))
                 source_counts["saved"] += 1
                 continue
             failures.append(f"{fixture_id}: detalhes adiados por orçamento")
-            source_counts["fixture_only"] += 1
 
         match = match_from_api_fixture(fixture, prediction_row)
         prediction = predict_one(settings, bundle, match)
         predictions.append(prediction)
+        if prediction.coverage.get("raw_prediction_features"):
+            source_counts["api_predictions"] += 1
+        elif prediction_row:
+            source_counts["api_empty"] += 1
+        else:
+            source_counts["fixture_only"] += 1
 
     output_path = (
         settings.data_dir
@@ -486,7 +569,7 @@ def settle_date(
     fixtures = {
         int(item["fixture"]["id"]): item
         for item in fixtures_payload.get("response", [])
-        if int(item.get("league", {}).get("id", 0)) == settings.world_cup_league_id
+        if _fixture_allowed(settings, item)
     }
     prediction_payload = _load_json(prediction_path, {"predictions": []})
     settled: list[dict[str, Any]] = []

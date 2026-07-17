@@ -55,13 +55,53 @@ type BetvisionAiPrediction = {
 };
 
 type PredictionsPayload = {
+  status?: "ok" | "processing";
   date: string;
   generated_at?: string;
   predictions: BetvisionAiPrediction[];
   failures?: string[];
+  message?: string;
 };
 
 const source: DataSourceKind = "computed-real";
+
+function coverageText(value: unknown, fallback = "N/D") {
+  return typeof value === "string" && value.trim().length > 0 ? value : fallback;
+}
+
+function analysisModeLabel(mode: unknown) {
+  switch (mode) {
+    case "individualized":
+      return "Individual por forma real";
+    case "partial_team_features":
+      return "Parcial por forma real";
+    case "provider_percent_fallback":
+      return "Estimativa com sinal do provedor";
+    case "fixture_profile_fallback":
+      return "Estimativa por perfil do confronto";
+    case "prior_only":
+      return "Média genérica";
+    default:
+      return "Cobertura limitada";
+  }
+}
+
+function dataCoverageLabel(coverage: Record<string, unknown>) {
+  if (coverage.raw_prediction_features) {
+    return "Forma/força real da API";
+  }
+  if (coverage.analysis_mode === "provider_percent_fallback") {
+    return "Percentuais do provedor + perfil estimado";
+  }
+  if (coverage.analysis_mode === "fixture_profile_fallback") {
+    return "Perfil estimado do confronto";
+  }
+  return "Somente calendário";
+}
+
+function providerProbabilityLabel(coverage: Record<string, unknown>) {
+  return coverage.provider_probabilities_used ? "Usadas como sinal auxiliar" : "Não usadas diretamente";
+}
 
 const translatedTeams: Record<string, string> = {
   "Argentina": "Argentina",
@@ -107,12 +147,23 @@ function translateTeamName(name: string) {
   return translatedTeams[name] ?? name;
 }
 
-function translateCompetition(name?: string) {
-  return {
-    "World Cup": "Copa do Mundo",
-    "Serie B": "Brasileirão Série B",
-    "Serie A": "Brasileirão Série A"
-  }[name ?? ""] ?? name ?? "Competição";
+function translateCompetition(name?: string, leagueId?: number) {
+  const byId: Record<number, string> = {
+    1: "Copa do Mundo",
+    2: "Champions League",
+    3: "Europa League",
+    11: "Sul-Americana",
+    13: "Libertadores",
+    39: "Premier League",
+    61: "Ligue 1",
+    71: "Brasileirão Série A",
+    72: "Brasileirão Série B",
+    73: "Copa do Brasil",
+    78: "Bundesliga",
+    135: "Serie A italiana",
+    140: "LaLiga"
+  };
+  return (leagueId ? byId[leagueId] : undefined) ?? name ?? "Competição";
 }
 
 function sourceStrength(probability: number): MarketProbability["strength"] {
@@ -278,15 +329,20 @@ function scoreProjection(prediction: BetvisionAiPrediction) {
 }
 
 function realStats(prediction: BetvisionAiPrediction, updatedAt: string): RealStatValue[] {
+  const validation = (prediction.coverage.validation_mae ?? {}) as Record<string, number>;
+  const coverage = prediction.coverage;
   return [
     { label: "Modelo da IA", value: prediction.model_version, source, updatedAt },
     { label: "Confiança", value: prediction.confidence, source, updatedAt },
-    { label: "Amostra de treino", value: String(prediction.coverage.training_matches ?? "N/D"), source, updatedAt },
-    { label: "Jogos detalhados", value: String(prediction.coverage.detailed_training_matches ?? "N/D"), source, updatedAt },
-    { label: "Fonte detalhada", value: String(prediction.coverage.detailed_source ?? "N/D"), source, updatedAt },
-    { label: "Modo da análise", value: prediction.coverage.analysis_mode === "individualized" ? "Individual por confronto" : "Média genérica", source, updatedAt },
-    { label: "Dados adicionais", value: prediction.coverage.raw_prediction_features ? "Disponível" : "Somente calendário", source, updatedAt },
-    { label: "Probabilidades provedor", value: "Ignoradas", source, updatedAt }
+    { label: "Amostra de treino", value: String(coverage.training_matches ?? "N/D"), source, updatedAt },
+    { label: "Jogos detalhados", value: String(coverage.detailed_training_matches ?? "N/D"), source, updatedAt },
+    { label: "Fonte detalhada", value: String(coverage.detailed_source ?? "N/D"), source, updatedAt },
+    { label: "Modo da análise", value: analysisModeLabel(coverage.analysis_mode), source, updatedAt },
+    { label: "Fonte das features", value: coverageText(coverage.feature_source), source, updatedAt },
+    { label: "MAE de gols", value: validation.goals !== undefined ? validation.goals.toFixed(2) : "N/D", source, updatedAt },
+    { label: "MAE de chutes", value: validation.shots !== undefined ? validation.shots.toFixed(2) : "N/D", source, updatedAt },
+    { label: "Dados adicionais", value: dataCoverageLabel(coverage), source, updatedAt },
+    { label: "Probabilidades provedor", value: providerProbabilityLabel(coverage), source, updatedAt }
   ];
 }
 
@@ -314,7 +370,7 @@ export function mapBetvisionPredictionToMatch(prediction: BetvisionAiPrediction,
       teamStatistics: Boolean(prediction.coverage.raw_prediction_features)
     },
     dataUpdatedAt: updatedAt,
-    competition: translateCompetition(meta.league_name ?? "World Cup"),
+    competition: translateCompetition(meta.league_name ?? "World Cup", meta.league_id),
     round: meta.round ?? "Projeção da IA",
     startsAt: meta.starts_at ?? `${prediction._source_date ?? date}T12:00:00-03:00`,
     venue: meta.venue ?? "A confirmar",
@@ -376,11 +432,30 @@ async function fetchJson<T>(path: string): Promise<T> {
 }
 
 export async function getBetvisionAiFixturesByDate(date: string) {
+  return (await getBetvisionAiFixturesResult(date)).matches;
+}
+
+export async function getBetvisionAiFixturesResult(date: string): Promise<{
+  matches: Match[];
+  status: "ok" | "processing" | "disabled";
+  message: string;
+  failures: string[];
+}> {
   if (!backendConfig.betvisionAi.configured) {
-    return [];
+    return {
+      matches: [],
+      status: "disabled",
+      message: "Backend BetVision AI nao configurado.",
+      failures: []
+    };
   }
   const payload = await fetchJson<PredictionsPayload>(`/predictions?date=${encodeURIComponent(date)}`);
-  return payload.predictions.map((prediction) => mapBetvisionPredictionToMatch(prediction, payload.date));
+  return {
+    matches: payload.predictions.map((prediction) => mapBetvisionPredictionToMatch(prediction, payload.date)),
+    status: payload.status ?? "ok",
+    message: payload.message ?? "",
+    failures: payload.failures ?? []
+  };
 }
 
 export async function getBetvisionAiMatchAnalysis(fixtureId: number) {

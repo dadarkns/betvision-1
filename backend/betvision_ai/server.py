@@ -6,6 +6,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from typing import Any
 from urllib.parse import parse_qs, urlparse
 
+from betvision_ai.automation import AutomationRunner, BackgroundAutomation
 from betvision_ai.config import Settings
 
 
@@ -43,7 +44,7 @@ def _load_prediction_by_fixture(settings: Settings, fixture_id: int) -> dict[str
     return None
 
 
-def make_handler(settings: Settings):
+def make_handler(settings: Settings, runner: AutomationRunner | None = None):
     class BetVisionAiHandler(BaseHTTPRequestHandler):
         server_version = "BetVisionAI/0.1"
 
@@ -66,19 +67,57 @@ def make_handler(settings: Settings):
                             "status": "ok",
                             "generated_at": datetime.now(timezone.utc).isoformat(),
                             "data_dir": str(settings.data_dir),
+                            "automation": runner.status() if runner else {"enabled": False},
                         },
+                    )
+
+                if parsed.path == "/automation/status":
+                    return _response(
+                        self,
+                        200,
+                        runner.status() if runner else {"enabled": False},
                     )
 
                 if parsed.path == "/predictions":
                     target = query.get("date", [settings.today.isoformat()])[0]
                     try:
-                        date.fromisoformat(target)
+                        target_date = date.fromisoformat(target)
                     except ValueError:
                         return _response(self, 400, {"error": "date deve estar no formato YYYY-MM-DD"})
 
-                    payload = _read_json(
-                        settings.data_dir / "outputs" / "predictions" / f"{target}.json"
-                    )
+                    prediction_path = settings.data_dir / "outputs" / "predictions" / f"{target}.json"
+                    payload = _read_json(prediction_path)
+                    if payload is None and runner and settings.auto_enabled:
+                        if runner.status().get("running"):
+                            return _response(
+                                self,
+                                202,
+                                {
+                                    "status": "processing",
+                                    "date": target,
+                                    "generated_at": datetime.now(timezone.utc).isoformat(),
+                                    "predictions": [],
+                                    "failures": [],
+                                    "message": "A IA da BetVision esta gerando as previsoes desta data.",
+                                    "automation": runner.status(),
+                                },
+                            )
+                        run_result = runner.run_once(target_date=target_date)
+                        payload = _read_json(prediction_path)
+                        if payload is None and run_result.get("skipped") == "automation_already_running":
+                            return _response(
+                                self,
+                                202,
+                                {
+                                    "status": "processing",
+                                    "date": target,
+                                    "generated_at": datetime.now(timezone.utc).isoformat(),
+                                    "predictions": [],
+                                    "failures": [],
+                                    "message": "A IA da BetVision esta gerando as previsoes desta data.",
+                                    "automation": run_result,
+                                },
+                            )
                     if payload is None:
                         return _response(
                             self,
@@ -96,6 +135,9 @@ def make_handler(settings: Settings):
                     if not raw_id.isdigit():
                         return _response(self, 400, {"error": "fixture_id invalido"})
                     prediction = _load_prediction_by_fixture(settings, int(raw_id))
+                    if prediction is None and runner and settings.auto_enabled:
+                        runner.run_once()
+                        prediction = _load_prediction_by_fixture(settings, int(raw_id))
                     if prediction is None:
                         return _response(self, 404, {"error": "previsao_nao_encontrada"})
                     return _response(self, 200, {"prediction": prediction})
@@ -108,8 +150,14 @@ def make_handler(settings: Settings):
 
 
 def serve_predictions(settings: Settings, host: str, port: int) -> None:
-    server = ThreadingHTTPServer((host, port), make_handler(settings))
+    runner = AutomationRunner(settings) if settings.auto_enabled else None
+    background = BackgroundAutomation(runner) if runner else None
+    if background:
+        background.start()
+    server = ThreadingHTTPServer((host, port), make_handler(settings, runner))
     try:
         server.serve_forever()
     finally:
+        if background:
+            background.stop()
         server.server_close()

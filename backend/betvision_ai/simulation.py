@@ -150,14 +150,26 @@ def build_user_analysis(
     alerts: list[str] = []
     if confidence == "baixa":
         alerts.append("A amostra histórica ainda é pequena; use como apoio, não como certeza.")
-    if not coverage.get("raw_prediction_features"):
+    analysis_mode = str(coverage.get("analysis_mode") or "")
+    if analysis_mode == "fixture_profile_fallback":
+        alerts.append("A API não trouxe forma recente útil; a projeção usa perfil estimado por confronto.")
+    elif analysis_mode == "provider_percent_fallback":
+        alerts.append("A API não trouxe forma recente útil; a projeção usa o sinal percentual do provedor e perfil do confronto.")
+    elif analysis_mode == "partial_team_features":
+        alerts.append("A API trouxe dados completos para apenas um dos times; a comparação tem confiança reduzida.")
+    elif not coverage.get("raw_prediction_features"):
         alerts.append("Análise feita sem estatísticas recentes detalhadas da API.")
     margin = abs(result["home"] - result["away"])
     if margin <= 8:
         alerts.append("Jogo equilibrado no mercado de resultado.")
 
+    coverage_prefix = (
+        "Com baixa cobertura, "
+        if analysis_mode in {"fixture_profile_fallback", "provider_percent_fallback", "prior_only"}
+        else ""
+    )
     summary = (
-        f"{favorite_label} aparece como opção mais provável no resultado "
+        f"{coverage_prefix}{favorite_label} aparece como opção mais provável no resultado "
         f"({favorite_probability:.0f}%). O mercado com melhor sinal é "
         f"{strongest['selection']} ({strongest['probability']:.0f}%)."
     )
@@ -301,26 +313,75 @@ def simulate_match(
         if name != "goals"
     )
     detailed_matches = int(bundle.training_summary.get("detailed_matches", 0))
-    has_match_features = bool(match.metadata.get("prediction_raw_features", False))
-    confidence = "moderada" if has_match_features and detailed_matches >= 80 else "baixa"
+    usable_team_feature_count = int(match.metadata.get("usable_team_feature_count") or 0)
+    feature_source = str(match.metadata.get("feature_source") or "calendar_identity_fallback")
+    has_match_features = usable_team_feature_count >= 2
+    has_partial_features = usable_team_feature_count == 1
+    league_id = int((match.metadata.get("fixture_meta") or {}).get("league_id") or 0)
+    in_training_domain = league_id == 1
+    confidence = (
+        "moderada"
+        if has_match_features and detailed_matches >= 80 and in_training_domain
+        else "baixa"
+    )
+    if has_match_features:
+        analysis_mode = "individualized"
+        feature_quality = "team_form_and_strength"
+    elif has_partial_features:
+        analysis_mode = "partial_team_features"
+        feature_quality = "partial_team_form"
+    elif feature_source == "provider_percent_fallback":
+        analysis_mode = "provider_percent_fallback"
+        feature_quality = "provider_percent_and_fixture_profile"
+    elif feature_source in {"fixture_identity_fallback", "calendar_identity_fallback"}:
+        analysis_mode = "fixture_profile_fallback"
+        feature_quality = "estimated_fixture_profile"
+    else:
+        analysis_mode = "prior_only"
+        feature_quality = "generic_prior"
     coverage = {
+        "calibration_version": "feature-quality-v2",
         "training_matches": bundle.training_summary.get("matches", 0),
         "detailed_training_matches": detailed_matches,
         "detailed_source": bundle.training_summary.get("detailed_source", "indisponível"),
         "detailed_models": detailed_coverage,
         "player_models": len(bundle.player_models),
-        "raw_prediction_features": has_match_features,
-        "provider_probabilities_used": False,
-        "analysis_mode": "individualized" if has_match_features else "prior_only",
-        "individualized_metrics": [
-            "goals",
-            "shots",
-            "shots_on_target",
-            "corners",
-            "fouls",
-            "cards",
-        ],
-        "feature_quality": "team_form_and_strength" if has_match_features else "generic_prior",
+        "raw_prediction_features": has_match_features or has_partial_features,
+        "usable_team_feature_count": usable_team_feature_count,
+        "feature_source": feature_source,
+        "provider_prediction_percent": match.metadata.get("provider_prediction_percent"),
+        "provider_probabilities_used": feature_source == "provider_percent_fallback",
+        "analysis_mode": analysis_mode,
+        "individualized_metrics": (
+            [
+                "goals",
+                "shots",
+                "shots_on_target",
+                "corners",
+                "fouls",
+                "cards",
+            ]
+            if has_match_features or has_partial_features
+            else []
+        ),
+        "feature_quality": feature_quality,
+        "model_domain": "world_cup_calibrated" if in_training_domain else "club_transfer_learning",
+        "domain_warning": (
+            None
+            if in_training_domain
+            else "Modelo detalhado treinado em Copas; forma atual dos clubes reduz a transferência, mas a confiança permanece baixa."
+        ),
+        "validation_mae": {
+            name: round(
+                min(
+                    model.validation.get("poisson_mae", model.fallback_mean),
+                    model.validation.get("xgb_mae", model.fallback_mean),
+                ),
+                3,
+            )
+            for name, model in bundle.models.items()
+            if model.validation
+        },
     }
     return PredictionOutput(
         fixture_id=match.fixture_id,

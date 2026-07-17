@@ -18,6 +18,7 @@ def settings(tmp_path: Path) -> Settings:
         reserve_requests=10,
         monte_carlo_samples=5000,
         random_seed=42,
+        auto_web_research=False,
     )
     value.ensure_directories()
     return value

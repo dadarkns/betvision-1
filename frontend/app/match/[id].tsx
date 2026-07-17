@@ -45,6 +45,7 @@ export default function MatchDetailScreen() {
   const confidence = match?.realStats?.find((item) => item.label === "Confiança")?.value;
   const detailedSource = match?.realStats?.find((item) => item.label === "Fonte detalhada")?.value;
   const detailedMatches = match?.realStats?.find((item) => item.label === "Jogos detalhados")?.value;
+  const analysisMode = match?.realStats?.find((item) => item.label === "Modo da análise")?.value;
   const home = resultMarket(match, "home");
   const draw = resultMarket(match, "neutral");
   const away = resultMarket(match, "away");
@@ -77,7 +78,7 @@ export default function MatchDetailScreen() {
                   return <View key={label as string} style={styles.probability}><Text style={styles.probabilityValue}>{item?.probability ?? 0}%</Text><Text style={styles.probabilityLabel}>{label as string}</Text></View>;
                 })}
               </View>
-              <Text style={styles.sourceLine}>Análise individual · {String(detailedMatches ?? 0)} jogos detalhados · {String(detailedSource ?? "dados históricos")}</Text>
+              <Text style={styles.sourceLine}>{String(analysisMode ?? "Cobertura limitada")} · {String(detailedMatches ?? 0)} jogos detalhados · {String(detailedSource ?? "dados históricos")}</Text>
             </View>
 
             <View style={[styles.dashboard, desktop && styles.dashboardDesktop]}>
