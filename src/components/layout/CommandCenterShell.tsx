@@ -1,7 +1,9 @@
 import React, { useState, useRef } from 'react';
-import { Animated, Pressable, ScrollView, StyleSheet, Text, TextInput, View, useWindowDimensions } from 'react-native';
-import { Bell, Menu, Search, Shield, X } from 'lucide-react-native';
+import { Animated, Image, Pressable, ScrollView, StyleSheet, Text, TextInput, View, useWindowDimensions } from 'react-native';
+import { Bell, Menu, Search, X } from 'lucide-react-native';
 import { colors, fonts, radius, spacing } from '../../constants/theme';
+
+const LOGO = require('../../assets/logo.png');
 
 export type ShellNavItem = {
   key: string;
@@ -72,13 +74,11 @@ export function CommandCenterShell({
           <Animated.View style={[styles.sidebar, { width: sidebarWidth }]}>
             <Animated.View style={[styles.sidebarInner, { opacity: sidebarOpacity }]}>
               <View style={styles.brandBlock}>
-                <View style={styles.brandMark}>
-                  <Shield size={14} color={colors.onPrimaryFixed} strokeWidth={2.4} />
-                </View>
-                <View>
-                  <Text style={styles.brandText} numberOfLines={1}>{brand}</Text>
-                  <Text style={styles.brandTagline} numberOfLines={1}>{tagline}</Text>
-                </View>
+                <Image
+                  source={LOGO}
+                  style={styles.sidebarLogo}
+                  resizeMode="contain"
+                />
               </View>
 
               <View style={styles.navGroup}>
@@ -128,9 +128,11 @@ export function CommandCenterShell({
                   }
                 </Pressable>
               ) : (
-                <View>
-                  <Text style={styles.mobileBrand}>{brand}</Text>
-                </View>
+                <Image
+                  source={LOGO}
+                  style={styles.mobileLogo}
+                  resizeMode="contain"
+                />
               )}
               {title ? <Text style={styles.pageTitle}>{title}</Text> : null}
               {subtitle ? <Text style={styles.pageSubtitle}>{subtitle}</Text> : null}
@@ -247,31 +249,16 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.lg,
   },
   brandBlock: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
     marginBottom: spacing.xl,
   },
-  brandMark: {
-    width: 36,
+  sidebarLogo: {
+    width: 200,
+    height: 64,
+    alignSelf: 'flex-start',
+  },
+  mobileLogo: {
+    width: 110,
     height: 36,
-    borderRadius: radius.sm,
-    backgroundColor: colors.primaryFixed,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  brandText: {
-    ...fonts.headlineMd,
-    color: colors.primaryFixed,
-    fontSize: 18,
-    lineHeight: 20,
-    textTransform: 'uppercase',
-  },
-  brandTagline: {
-    ...fonts.labelMono,
-    color: colors.onSurfaceVariant,
-    fontSize: 8,
-    textTransform: 'uppercase',
   },
   navGroup: {
     gap: 4,
@@ -385,13 +372,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  mobileBrand: {
-    ...fonts.labelMono,
-    color: colors.primaryFixed,
-    fontSize: 10,
-    textTransform: 'uppercase',
-    letterSpacing: 2,
-  },
+
   pageTitle: {
     ...fonts.headlineLg,
     color: colors.onSurface,

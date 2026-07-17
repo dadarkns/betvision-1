@@ -1,8 +1,10 @@
 import React, { useRef, useEffect } from 'react';
 import {
   View, Text, ScrollView, FlatList, StyleSheet,
-  Animated, Pressable, StatusBar, SafeAreaView,
+  Animated, Image, Pressable, StatusBar, SafeAreaView,
 } from 'react-native';
+
+const LOGO = require('../assets/logo.png');
 import { GlassCard } from '../components/GlassCard';
 import { LiveMatchCard } from '../components/LiveMatchCard';
 import { colors, fonts, spacing } from '../constants/theme';
@@ -117,7 +119,7 @@ export function DashboardScreen() {
               <PulseDot />
               <Text style={styles.liveFeedText}>AO VIVO</Text>
             </View>
-            <Text style={styles.headerTitle}>BETVISION</Text>
+            <Image source={LOGO} style={styles.headerLogo} resizeMode="contain" />
           </View>
           <Pressable style={styles.premiumPill}>
             <Text style={styles.premiumText}>SEJA PRO</Text>
@@ -278,6 +280,10 @@ const styles = StyleSheet.create({
     color: colors.primaryFixed,
     fontStyle: 'italic',
     letterSpacing: -0.5,
+  },
+  headerLogo: {
+    width: 120,
+    height: 38,
   },
   hero: {
     margin: spacing.marginMobile,
