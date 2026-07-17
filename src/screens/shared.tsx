@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, ViewStyle } from 'react-native';
+import { StyleSheet, Text, View, ViewStyle, useWindowDimensions } from 'react-native';
 import { colors, fonts, radius, spacing } from '../constants/theme';
 
 export function ScreenHeader({
@@ -13,14 +13,17 @@ export function ScreenHeader({
   subtitle?: string;
   action?: React.ReactNode;
 }) {
+  const { width } = useWindowDimensions();
+  const isWide = width >= 768;
+
   return (
-    <View style={headerStyles.wrap}>
+    <View style={[headerStyles.wrap, !isWide && { flexDirection: 'column', alignItems: 'flex-start', gap: spacing.sm }]}>
       <View style={headerStyles.textBlock}>
         {kicker ? <Text style={headerStyles.kicker}>{kicker}</Text> : null}
         <Text style={headerStyles.title}>{title}</Text>
         {subtitle ? <Text style={headerStyles.subtitle}>{subtitle}</Text> : null}
       </View>
-      {action ? <View style={headerStyles.action}>{action}</View> : null}
+      {action ? <View style={[headerStyles.action, !isWide && { alignItems: 'flex-start', width: '100%' }]}>{action}</View> : null}
     </View>
   );
 }
@@ -122,6 +125,8 @@ const tileStyles = StyleSheet.create({
     borderRadius: radius.lg,
     padding: spacing.md,
     gap: 4,
+    flex: 1,
+    minWidth: 130,
   },
   label: {
     ...fonts.labelMono,

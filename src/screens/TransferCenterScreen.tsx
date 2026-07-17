@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import { ArrowRight, CircleDollarSign, Flame, Megaphone, TrendingUp } from 'lucide-react-native';
 import { GlassCard } from '../components/GlassCard';
 import { colors, fonts, radius, spacing } from '../constants/theme';
@@ -19,6 +19,8 @@ const windowRankings = [
 ];
 
 export function TransferCenterScreen() {
+  const { width } = useWindowDimensions();
+  const isWide = width >= 980;
   return (
     <View style={styles.page}>
       <ScreenHeader
@@ -33,7 +35,7 @@ export function TransferCenterScreen() {
         )}
       />
 
-      <View style={styles.gridWrap}>
+      <View style={[styles.gridWrap, !isWide && { flexDirection: 'column' }]}>
         <View style={styles.leftColumn}>
           <GlassCard style={styles.chartCard}>
             <SectionLabel title="Tendências de Mercado" action="Janela '24" />
@@ -81,7 +83,7 @@ export function TransferCenterScreen() {
           </GlassCard>
         </View>
 
-        <View style={styles.rightColumn}>
+        <View style={[styles.rightColumn, isWide && { width: 340 }]}>
           <GlassCard style={styles.newsCard}>
             <SectionLabel title="Rumores e Notícias" />
             <View style={styles.newsList}>

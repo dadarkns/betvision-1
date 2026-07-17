@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import Svg, { Circle, Polygon, Line, Text as SvgText } from 'react-native-svg';
 import { ChartNoAxesCombined, CornerDownRight, Trophy } from 'lucide-react-native';
 import { GlassCard } from '../components/GlassCard';
@@ -80,6 +80,8 @@ function CompareRadar() {
 }
 
 export function ComparisonScreen() {
+  const { width } = useWindowDimensions();
+  const isWide = width >= 980;
   return (
     <View style={styles.page}>
       <ScreenHeader
@@ -94,7 +96,7 @@ export function ComparisonScreen() {
         )}
       />
 
-      <View style={styles.heroGrid}>
+      <View style={[styles.heroGrid, !isWide && { flexDirection: 'column' }]}>
         <GlassCard style={styles.playerCard}>
           <View style={styles.poster}>
             <View style={styles.posterGlow} />

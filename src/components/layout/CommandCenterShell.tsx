@@ -158,16 +158,6 @@ export function CommandCenterShell({
                 style={styles.searchInput}
               />
             </View>
-            {isDesktop ? (
-              <View style={styles.quickActions}>
-                <View style={styles.quickActionPill}>
-                  <Text style={styles.quickActionLabel}>SERVIDOR</Text>
-                </View>
-                <View style={styles.quickActionPill}>
-                  <Text style={styles.quickActionLabel}>STATUS API</Text>
-                </View>
-              </View>
-            ) : null}
           </View>
 
           {/* Conteúdo */}

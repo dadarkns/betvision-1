@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import { Medal, TrendingUp, Trophy } from 'lucide-react-native';
 import { GlassCard } from '../components/GlassCard';
 import { colors, fonts, radius, spacing } from '../constants/theme';
@@ -15,6 +15,8 @@ const ZONE_ACCENTS = {
 } as const;
 
 export function LeagueStandingsScreen() {
+  const { width } = useWindowDimensions();
+  const isWide = width >= 980;
   const leader = leagueStandings[0];
   const top = leagueStandings.slice(0, 4);
   const relegation = leagueStandings.find(item => item.zone === 'relegation');
@@ -33,7 +35,7 @@ export function LeagueStandingsScreen() {
         )}
       />
 
-      <View style={styles.gridWrap}>
+      <View style={[styles.gridWrap, !isWide && { flexDirection: 'column' }]}>
         <GlassCard style={styles.tableCard}>
           <SectionLabel title="Classificacao" action="Atualizada agora" />
           <View style={styles.tableHead}>
@@ -72,7 +74,7 @@ export function LeagueStandingsScreen() {
           })}
         </GlassCard>
 
-        <View style={styles.sideColumn}>
+        <View style={[styles.sideColumn, isWide && { width: 340 }]}>
           <GlassCard style={styles.leaderCard} highlighted>
             <View style={styles.leaderHead}>
               <Trophy size={16} color={colors.primaryFixed} />

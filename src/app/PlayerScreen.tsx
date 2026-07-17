@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 import {
   View, Text, ScrollView, StyleSheet,
-  SafeAreaView, StatusBar, Pressable, Dimensions,
+  SafeAreaView, StatusBar, Pressable,
 } from 'react-native';
 import Svg, { Circle, Polygon, Line, Text as SvgText } from 'react-native-svg';
 import { GlassCard } from '../components/GlassCard';
 import { colors, fonts, spacing } from '../constants/theme';
 import { playerVinicius } from '../constants/data';
-
-const { width: SCREEN_W } = Dimensions.get('window');
 
 function RadarChart({ skills }: { skills: typeof playerVinicius.skills }) {
   const size = 160;

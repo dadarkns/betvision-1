@@ -1,15 +1,14 @@
 import React from 'react';
-import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import { Activity, ChevronLeft, ChevronRight, Radio, Shield, Sparkles, Star, Trophy } from 'lucide-react-native';
 import { GlassCard } from '../components/GlassCard';
 import { colors, fonts, radius, spacing } from '../constants/theme';
 import { liveMatches, todaysMatches, topScorers } from '../constants/data';
 import { Grid, MiniBar, Pill, ScreenHeader, SectionLabel, StatTile } from './shared';
 
-const { width: SCREEN_W } = Dimensions.get('window');
-
 export function MatchCenterScreen() {
-  const isWide = SCREEN_W >= 1100;
+  const { width } = useWindowDimensions();
+  const isWide = width >= 980;
   const mainMatch = liveMatches[0];
   const secondaryMatch = liveMatches[1];
 
@@ -86,7 +85,7 @@ export function MatchCenterScreen() {
           </View>
         </GlassCard>
 
-        <View style={styles.sideColumn}>
+        <View style={[styles.sideColumn, isWide && { width: 340 }]}>
           <GlassCard style={styles.scorersCard}>
             <SectionLabel title="Artilheiros" action="Global" />
             <View style={styles.scorerList}>

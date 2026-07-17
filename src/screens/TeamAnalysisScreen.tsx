@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import { ArrowUpRight, Shield, Sparkles, Users } from 'lucide-react-native';
 import { GlassCard } from '../components/GlassCard';
 import { colors, fonts, radius, spacing } from '../constants/theme';
@@ -17,7 +17,8 @@ const fixtures = [
 ];
 
 export function TeamAnalysisScreen() {
-
+  const { width } = useWindowDimensions();
+  const isWide = width >= 980;
   return (
     <View style={styles.page}>
       <ScreenHeader
@@ -55,7 +56,7 @@ export function TeamAnalysisScreen() {
         </View>
       </GlassCard>
 
-      <View style={styles.mainGrid}>
+      <View style={[styles.mainGrid, !isWide && { flexDirection: 'column' }]}>
         <GlassCard style={styles.boardCard}>
           <SectionLabel title="Painel Tático" action="Ataque" />
           <View style={styles.tacticalGrid}>
@@ -83,7 +84,7 @@ export function TeamAnalysisScreen() {
           </View>
         </GlassCard>
 
-        <View style={styles.sideColumn}>
+        <View style={[styles.sideColumn, isWide && { width: 340 }]}>
           <GlassCard style={styles.performersCard}>
             <SectionLabel title="Melhores desempenhos" action="Ver elenco" />
             {performers.map(item => (
